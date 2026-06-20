@@ -1,0 +1,9 @@
+
+.env
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+backend/uploads/
+backend/*.pt
+backend/run_history.json
