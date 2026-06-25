@@ -9,10 +9,13 @@ from analyzer import analyze_run
 from shoe_recommender import get_shoe_recommendations
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://perfectpath.app",
+        "https://www.perfectpath.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
