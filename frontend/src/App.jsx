@@ -46,7 +46,7 @@ function App() {
     formData.append("run_type", runType);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/analyze", {
+      const response = await fetch("https://perfect-path.onrender.com/analyze", {
         method: "POST",
         body: formData,
       });
@@ -54,7 +54,7 @@ function App() {
       const data = await response.json();
 
       setResult(data);
-      const historyResponse = await fetch("http://127.0.0.1:8000/history");
+      const historyResponse = await fetch("https://perfect-path.onrender.com/history");
 const historyData = await historyResponse.json();
 setHistory(historyData.history);
       setScreen("results");
@@ -78,7 +78,7 @@ setHistory(historyData.history);
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/shoes", {
+      const response = await fetch("https://perfect-path.onrender.com/shoes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
