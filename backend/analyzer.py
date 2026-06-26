@@ -253,11 +253,6 @@ def analyze_run(video_path, run_type="road"):
             break
 
         frame_number += 1
-
-        # Only analyze every 5th frame to reduce memory/CPU use
-        if frame_number % 10 != 0:
-            continue
-
         timestamp = 0 if fps == 0 else frame_number / fps
 
         # Resize frame before running YOLO to reduce memory use
