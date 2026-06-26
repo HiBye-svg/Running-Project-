@@ -7,6 +7,7 @@ from datetime import datetime
 import google.generativeai as genai
 from dotenv import load_dotenv
 from ultralytics import YOLO
+yolo_model = YOLO("yolo11n-pose.pt")
 
 load_dotenv("../.env")
 
@@ -14,7 +15,6 @@ api_key = os.environ["GEMINI_API_KEY"]
 genai.configure(api_key=api_key)
 
 gemini_model = genai.GenerativeModel("gemini-2.5-flash")
-yolo_model = YOLO("yolo11n-pose.pt")
 
 history_file = "run_history.json"
 
@@ -255,7 +255,7 @@ def analyze_run(video_path, run_type="road"):
         frame_number += 1
 
         # Only analyze every 5th frame to reduce memory/CPU use
-        if frame_number % 5 != 0:
+        if frame_number % 8 != 0:
             continue
 
         timestamp = 0 if fps == 0 else frame_number / fps
