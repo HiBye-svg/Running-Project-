@@ -46,10 +46,10 @@ function App() {
     formData.append("run_type", runType);
 
     try {
-      const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space", {
-        method: "POST",
-        body: formData,
-      });
+     const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space/analyze", {
+  method: "POST",
+  body: formData,
+});
 
       const data = await response.json();
 
@@ -78,7 +78,7 @@ setHistory(historyData.history);
     }
 
     try {
-      const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space", {
+      const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space/shoes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
