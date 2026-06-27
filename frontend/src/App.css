@@ -307,7 +307,72 @@ input {
   background: linear-gradient(#d6a55d, #8b5e34);
   clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
 }
+.login-section {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+.login-section {
+  display: flex;
+  justify-content: center;
+  margin: 28px 0 6px;
+}
 
+.google-button {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #111827;
+  border-radius: 999px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.google-button:hover {
+  transform: translateY(-2px);
+}
+
+.google-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: #4285f4;
+}
+.google-button,
+.user-pill button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.google-button {
+  background: white;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.google-logo {
+  font-weight: 900;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 .runner {
   position: absolute;
   bottom: 10px; 
@@ -326,7 +391,26 @@ input {
     linear-gradient(#7c4a22, #7c4a22) center bottom / 10px 48px no-repeat,
     radial-gradient(circle, #166534 0 55%, transparent 56%) center top / 72px 72px no-repeat;
 }
+.google-button {
+  border: none;
+  background: white;
+  color: #111827;
+  border-radius: 999px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
 
+.google-logo {
+  color: #4285f4;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
 .left-tree {
   left: 80px;
 }

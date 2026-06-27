@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { auth, provider } from "./firebase";
+import { signInWithPopup, signOut } from "firebase/auth";
 import {
   LineChart,
   Line,
@@ -12,6 +14,7 @@ import "./App.css";
 
 function App() {
   const [screen, setScreen] = useState("home");
+  const [user, setUser] = useState(null);
   const [runType, setRunType] = useState(null);
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,7 +22,20 @@ function App() {
   const [footWidth, setFootWidth] = useState("");
   const [shoeSuggestions, setShoeSuggestions] = useState(null);
   const [history, setHistory] = useState([]);
-  
+  async function loginWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    setUser(result.user);
+  } catch (error) {
+    console.error(error);
+    alert("Google sign-in failed.");
+  }
+}
+
+async function logout() {
+  await signOut(auth);
+  setUser(null);
+}
 
   function chooseRun(type) {
     setRunType(type);
@@ -158,30 +174,43 @@ const buildChartData = () => {
             <p className="eyebrow">AI-assisted running form analysis</p>
             <h1>Find your own Perfect Path.</h1>
             <p className="hero-copy">
-              Upload a 10-30 second  video, review your form, track improvement,
+              Upload a 10 second  video, review your form, track improvement,
               and get shoe suggestions built around your run type.
             </p>
           </section>
 
+    <section className="login-section">
+  {user ? (
+    <div className="user-pill">
+      <span>👋 {user.displayName}</span>
+      <button onClick={logout}>Sign out</button>
+    </div>
+  ) : (
+    <button className="google-button" onClick={loginWithGoogle}>
+      <span className="google-logo">G</span>
+Sign in with Google
+    </button>
+  )}
+</section>
           <section className="mode-grid three-modes">
             <button className="mode-card road-card" onClick={() => chooseRun("road")}>
               <div className="mode-icon">🏃</div>
               <h2>Normal Run</h2>
-              <p>Best for road runs, track workouts, easy runs, and everyday form checks.</p>
+              <p>Best for road runs, track workouts, and easy runs.</p>
               <span>Analyze road form →</span>
             </button>
 
             <button className="mode-card trail-card" onClick={() => chooseRun("flat_trail")}>
               <div className="mode-icon">🌲</div>
               <h2>Flat Trail</h2>
-              <p>For dirt paths and flatter trails where terrain varies but climbing is limited.</p>
+              <p>For flatter trails where terrain varies but not a significant elevation gain.</p>
               <span>Analyze flat trail →</span>
             </button>
 
             <button className="mode-card hill-card" onClick={() => chooseRun("trail_hill")}>
               <div className="mode-icon">⛰️</div>
               <h2>Hill Trail</h2>
-              <p>For uphill trail clips where lean, stride, and sway naturally change.</p>
+              <p>For uphill trail clip.</p>
               <span>Analyze hill form →</span>
             </button>
           </section>
@@ -355,7 +384,7 @@ const buildChartData = () => {
               </div>
             )}
           </section>
-        </main>
+          </main>
       )}
     </div>
   );
