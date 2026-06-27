@@ -697,12 +697,12 @@ input {
 }
 .coming-soon-banner {
   max-width: 950px;
-  margin: 18px auto 0;
+  margin: 8px auto 18px;
   padding: 14px 22px;
   text-align: center;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255,255,255,.88);
   color: #14532d;
   font-weight: 800;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
 }
