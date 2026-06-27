@@ -46,7 +46,7 @@ function App() {
     formData.append("run_type", runType);
 
     try {
-      const response = await fetch("https://perfect-path.onrender.com/analyze", {
+      const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space", {
         method: "POST",
         body: formData,
       });
@@ -54,7 +54,7 @@ function App() {
       const data = await response.json();
 
       setResult(data);
-      const historyResponse = await fetch("https://perfect-path.onrender.com/history");
+      const historyResponse = await fetch("https://hibye-svg-perfect-path-backend.hf.space/history");
 const historyData = await historyResponse.json();
 setHistory(historyData.history);
       setScreen("results");
@@ -78,7 +78,7 @@ setHistory(historyData.history);
     }
 
     try {
-      const response = await fetch("https://perfect-path.onrender.com/shoes", {
+      const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
