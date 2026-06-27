@@ -219,8 +219,7 @@ Sign in with Google
   <h2>Help Improve Perfect Path</h2>
 
   <p>
-    Found a bug, have a feature request, or just want to share your
-    experience? We'd love to hear from you.
+    Share your experience on the site. Tell what you loved and what can be improved. Your feedback is valued and thank you in advance.
   </p>
 
   <a
