@@ -485,7 +485,48 @@ input {
 .results-title {
   text-align: center;
 }
+.feedback-section {
+  max-width: 800px;
+  margin: 70px auto 40px;
+  padding: 40px;
+  text-align: center;
 
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.feedback-section h2 {
+  margin-bottom: 12px;
+  font-size: 2rem;
+}
+
+.feedback-section p {
+  color: #d5d5d5;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.feedback-button {
+  display: inline-block;
+  padding: 14px 28px;
+
+  border-radius: 999px;
+  text-decoration: none;
+
+  background: #2bb673;
+  color: white;
+  font-weight: 700;
+
+  transition: .25s;
+}
+
+.feedback-button:hover {
+  transform: translateY(-2px);
+  background: #239d63;
+}
 .issue-grid {
   margin-top: 26px;
   display: grid;
