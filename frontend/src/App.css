@@ -504,9 +504,11 @@ input {
 }
 
 .feedback-section p {
-  color: #d5d5d5;
+  color: #2f3b4a;
+  font-size: 1.05rem;
   line-height: 1.7;
-  margin-bottom: 28px;
+  max-width: 600px;
+  margin: 15px auto 25px;
 }
 
 .feedback-button {
