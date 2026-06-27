@@ -165,7 +165,7 @@ const buildChartData = () => {
           <span>Perfect Path</span>
         </button>
 
-        <div className="nav-pill">50+ shoe choices</div>
+        <div className="nav-pill">70+ shoe choices</div>
       </nav>
 
       {screen === "home" && (
@@ -193,6 +193,22 @@ Sign in with Google
   )}
 </section>
           <section className="mode-grid three-modes">
+            <section className="feedback-section">
+  <h2>Help Improve Perfect Path</h2>
+  <p>
+    Found a bug, have a feature idea, or want to share your experience?
+    Your feedback helps make Perfect Path better for runners.
+  </p>
+
+  <a
+    href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=publish-editor"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="feedback-button"
+  >
+    💬 Give Feedback
+  </a>
+</section>
             <button className="mode-card road-card" onClick={() => chooseRun("road")}>
               <div className="mode-icon">🏃</div>
               <h2>Normal Run</h2>
@@ -307,6 +323,22 @@ Sign in with Google
                   <h3>{issue.issue.replace("Possible ", "")}</h3>
                   <span>{issue.detected ? "Detected" : "Clear"}</span>
                 </div>
+                <section className="feedback-section">
+  <h2>Help Improve Perfect Path</h2>
+  <p>
+    Found a bug, have a feature idea, or want to share your experience?
+    Your feedback helps make Perfect Path better for runners.
+  </p>
+
+  <a
+    href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=publish-editor"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="feedback-button"
+  >
+    💬 Give Feedback
+  </a>
+</section>
 <section className="feedback-card">
   <h2>Progress Graph</h2>
   <p>Tracks your form trends across your recent runs.</p>
