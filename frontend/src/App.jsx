@@ -158,7 +158,9 @@ const buildChartData = () => {
         <div className="tree tree-three"></div>
         <div className="tree tree-four"></div>
       </div>
-
+<div className="coming-soon-banner">
+  🚧 Coming Soon: AI-powered shoe recommendations based on your running form analysis, and foot width.
+</div> 
       <nav className="navbar">
         <button className="brand-button" onClick={goHome}>
           <span className="brand-mark">PP</span>
