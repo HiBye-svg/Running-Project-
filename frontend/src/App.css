@@ -706,3 +706,27 @@ input {
   font-weight: 800;
   box-shadow: 0 12px 30px rgba(0,0,0,.08);
 }
+/* FORCE READABLE TEXT COLORS */
+.hero h1,
+.analysis-card h1,
+.results-title h1,
+.mode-card h2,
+.feedback-section h2,
+.issue-top h3,
+.shoe-result-card h3 {
+  color: #07111f !important;
+}
+
+.hero-copy,
+.hero p,
+.analysis-card p,
+.results-title p,
+.mode-card p {
+  color: #2f3b4a !important;
+}
+
+.nav-pill,
+.back-button,
+.mode-card span {
+  color: #0f5132 !important;
+}
