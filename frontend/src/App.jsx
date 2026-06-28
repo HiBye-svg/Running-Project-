@@ -100,10 +100,11 @@ setHistory(historyData.history);
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          foot_width: footWidth,
-          issues: result.issues,
-          run_type: runType,
-        }),
+  foot_width: footWidth,
+  issues: result.issues,
+  run_type: runType,
+  feedback: result.feedback,
+}),
       });
 
       const data = await response.json();
