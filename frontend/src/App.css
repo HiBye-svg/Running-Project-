@@ -774,4 +774,92 @@ button:hover {
   .shoe-controls select {
     width: 100%;
   }
+}.home-v2 {
+  max-width: 100%;
+  padding: 0;
+}
+
+.hero-scene {
+  position: relative;
+  min-height: calc(100vh - 78px);
+  overflow: hidden;
+  padding: 70px 28px 60px;
+  background:
+    linear-gradient(180deg, rgba(255,250,242,.92), rgba(246,243,234,.72)),
+    radial-gradient(circle at 50% 12%, rgba(246, 211, 140, .45), transparent 35%),
+    linear-gradient(180deg, #fffaf2, #e9efe8);
+}
+
+.hero-mountains {
+  position: absolute;
+  inset: auto 0 0;
+  height: 55%;
+  opacity: .42;
+  background:
+    linear-gradient(135deg, transparent 0 28%, #799080 28% 39%, transparent 39%),
+    linear-gradient(225deg, transparent 0 32%, #456454 32% 47%, transparent 47%),
+    linear-gradient(140deg, transparent 0 18%, #a7b7aa 18% 34%, transparent 34%);
+  filter: blur(.2px);
+}
+
+.hero-trail {
+  position: absolute;
+  left: 50%;
+  bottom: -120px;
+  width: 360px;
+  height: 520px;
+  transform: translateX(-50%) perspective(420px) rotateX(58deg);
+  background: linear-gradient(to top, #9c6a3b, #c58a4b, #e0b16b);
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+  opacity: .58;
+}
+
+.hero-runner {
+  position: absolute;
+  left: 50%;
+  bottom: 270px;
+  width: 42px;
+  height: 72px;
+  transform: translateX(-50%) scale(.55);
+  animation: heroRunnerFloat 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+.hero-runner span {
+  position: absolute;
+  display: block;
+  background: #10251d;
+  border-radius: 999px;
+}
+
+.hero-v2 {
+  position: relative;
+  z-index: 2;
+  padding: 40px 20px 28px;
+}
+
+.hero-v2 h1 {
+  font-size: clamp(54px, 7vw, 92px);
+}
+
+.mode-grid-v2 {
+  position: relative;
+  z-index: 2;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 22px 0 0;
+}
+
+.mode-grid-v2 .mode-card {
+  backdrop-filter: blur(14px);
+  background: rgba(255,255,255,.9);
+}
+
+@keyframes heroRunnerFloat {
+  0%, 100% {
+    transform: translateX(-50%) scale(.55) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) scale(.55) translateY(-8px);
+  }
 }
