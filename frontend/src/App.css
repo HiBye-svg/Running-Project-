@@ -168,18 +168,6 @@ button:hover {
   color: var(--green-dark);
 }
 
-.hero h1::before {
-  content: "Find Your Own Perfect Path";
-}
-
-.hero h1 {
-  font-size: 0;
-}
-
-.hero h1::before {
-  font-size: clamp(48px, 7vw, 86px);
-}
-
 .hero-copy,
 .hero p,
 .analysis-card p,
@@ -781,85 +769,137 @@ button:hover {
 
 .hero-scene {
   position: relative;
-  min-height: calc(100vh - 78px);
+  min-height: calc(100vh - 92px);
   overflow: hidden;
-  padding: 70px 28px 60px;
+  padding: 55px 28px 70px;
   background:
-    linear-gradient(180deg, rgba(255,250,242,.92), rgba(246,243,234,.72)),
-    radial-gradient(circle at 50% 12%, rgba(246, 211, 140, .45), transparent 35%),
-    linear-gradient(180deg, #fffaf2, #e9efe8);
+    linear-gradient(180deg, rgba(255, 244, 238, 0.28), rgba(255, 250, 246, 0.88)),
+    radial-gradient(circle at 28% 25%, rgba(255, 179, 191, 0.55), transparent 28%),
+    radial-gradient(circle at 70% 18%, rgba(255, 207, 133, 0.45), transparent 32%),
+    linear-gradient(135deg, #ffe9d6 0%, #f7d5dd 42%, #efe4ff 100%);
 }
 
-.hero-mountains {
+.hero-scene::before {
+  content: "";
   position: absolute;
-  inset: auto 0 0;
-  height: 55%;
-  opacity: .42;
+  inset: 0;
   background:
-    linear-gradient(135deg, transparent 0 28%, #799080 28% 39%, transparent 39%),
-    linear-gradient(225deg, transparent 0 32%, #456454 32% 47%, transparent 47%),
-    linear-gradient(140deg, transparent 0 18%, #a7b7aa 18% 34%, transparent 34%);
-  filter: blur(.2px);
+    linear-gradient(135deg, transparent 0 58%, rgba(45, 35, 80, 0.38) 58% 72%, transparent 72%),
+    linear-gradient(225deg, transparent 0 55%, rgba(88, 57, 105, 0.32) 55% 70%, transparent 70%),
+    linear-gradient(150deg, transparent 0 62%, rgba(190, 124, 86, 0.25) 62% 76%, transparent 76%);
+  opacity: 0.9;
+}
+
+.hero-scene::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -80px;
+  height: 48%;
+  background:
+    linear-gradient(180deg, transparent, rgba(34, 24, 58, 0.82)),
+    radial-gradient(circle at 20% 80%, rgba(255, 132, 92, 0.45), transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(30, 22, 54, 0.85), transparent 36%);
 }
 
 .hero-trail {
   position: absolute;
   left: 50%;
-  bottom: -120px;
-  width: 360px;
-  height: 520px;
+  bottom: -80px;
+  width: 300px;
+  height: 440px;
   transform: translateX(-50%) perspective(420px) rotateX(58deg);
-  background: linear-gradient(to top, #9c6a3b, #c58a4b, #e0b16b);
-  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
-  opacity: .58;
+  background: linear-gradient(to top, #3b2445, #8d4e5f, #e59664);
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  opacity: 0.88;
+  z-index: 1;
+}
+
+.hero-mountains {
+  display: none;
 }
 
 .hero-runner {
   position: absolute;
   left: 50%;
-  bottom: 270px;
+  bottom: 265px;
   width: 42px;
   height: 72px;
   transform: translateX(-50%) scale(.55);
-  animation: heroRunnerFloat 3s ease-in-out infinite;
-  z-index: 1;
+  animation: heroRunnerRun 2.2s ease-in-out infinite;
+  z-index: 2;
 }
 
 .hero-runner span {
   position: absolute;
   display: block;
-  background: #10251d;
+  background: #161124;
   border-radius: 999px;
 }
 
 .hero-v2 {
   position: relative;
-  z-index: 2;
-  padding: 40px 20px 28px;
+  z-index: 3;
+  padding: 25px 20px 22px;
+  text-align: left;
+  max-width: 1050px;
+  margin: 0 auto;
 }
 
 .hero-v2 h1 {
-  font-size: clamp(54px, 7vw, 92px);
+  color: #1e1435;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  max-width: 520px;
+  margin: 0 0 16px;
+}
+
+.hero-v2 .hero-copy {
+  color: #3e344c;
+  margin: 0;
+  max-width: 430px;
+  font-size: 18px;
 }
 
 .mode-grid-v2 {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   max-width: 1050px;
   margin: 0 auto;
-  padding: 22px 0 0;
+  padding: 28px 0 0;
 }
 
 .mode-grid-v2 .mode-card {
-  backdrop-filter: blur(14px);
-  background: rgba(255,255,255,.9);
+  background: rgba(255, 250, 246, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  box-shadow: 0 22px 55px rgba(37, 24, 61, 0.18);
 }
 
-@keyframes heroRunnerFloat {
+.mode-grid-v2 .mode-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 28px 70px rgba(37, 24, 61, 0.26);
+}
+
+.mode-grid-v2 .mode-card h2 {
+  color: #21172f;
+}
+
+.mode-grid-v2 .mode-card span {
+  color: #a1445f;
+}
+
+.mode-grid-v2 .mode-icon {
+  background: #3b2445;
+}
+
+@keyframes heroRunnerRun {
   0%, 100% {
     transform: translateX(-50%) scale(.55) translateY(0);
   }
   50% {
-    transform: translateX(-50%) scale(.55) translateY(-8px);
+    transform: translateX(-50%) scale(.55) translateY(-10px);
   }
 }
