@@ -201,85 +201,57 @@ console.log(buildChartData());
     <button className="nav-link" onClick={() => setShowFounder(true)}>
       About Founder
     </button>
-
-    {user ? (
-      <button className="nav-link" onClick={logout}>
-        Sign out
-      </button>
-    ) : (
-      <button className="nav-link nav-signin" onClick={loginWithGoogle}>
-        Sign in
-      </button>
-    )}
   </div>
 </nav>
 
       {screen === "home" && (
-        <main className="home">
-          <section className="hero">
-            <p className="eyebrow">AI-assisted running form analysis</p>
-            <h1>Find your own Perfect Path.</h1>
-            <p className="hero-copy">
-              Upload a 10 second  video, review your form, track improvement,
-              and get shoe suggestions built around your run type.
-            </p>
-          </section>
+  <main className="home home-v2">
+    <section className="hero-scene">
+      <div className="hero-mountains"></div>
+      <div className="hero-trail"></div>
 
-    <section className="login-section">
-  {user ? (
-    <div className="user-pill">
-      <span>👋 {user.displayName}</span>
-      <button onClick={logout}>Sign out</button>
-    </div>
-  ) : (
-    <button className="google-button" onClick={loginWithGoogle}>
-      <span className="google-logo">G</span>
-Sign in with Google
-    </button>
-  )}
-</section>
-          <section className="mode-grid three-modes">
-            <button className="mode-card road-card" onClick={() => chooseRun("road")}>
-              <div className="mode-icon">🏃</div>
-              <h2>Normal Run</h2>
-              <p>Best for road runs, track workouts, and easy runs.</p>
-              <span>Analyze road form →</span>
-            </button>
+      <div className="hero-runner">
+        <span className="head"></span>
+        <span className="body"></span>
+        <span className="arm arm-left"></span>
+        <span className="arm arm-right"></span>
+        <span className="leg leg-left"></span>
+        <span className="leg leg-right"></span>
+      </div>
 
-            <button className="mode-card trail-card" onClick={() => chooseRun("flat_trail")}>
-              <div className="mode-icon">🌲</div>
-              <h2>Flat Trail</h2>
-              <p>For flatter trails where terrain varies but not a significant elevation gain.</p>
-              <span>Analyze flat trail →</span>
-            </button>
+      <section className="hero hero-v2">
+        <h1>Find Your Own Perfect Path</h1>
+        <p className="hero-copy">
+          Upload a 10 second video, review your form, track improvement,
+          and get shoe suggestions built around your run type.
+        </p>
+      </section>
 
-            <button className="mode-card hill-card" onClick={() => chooseRun("trail_hill")}>
-              <div className="mode-icon">⛰️</div>
-              <h2>Hill Trail</h2>
-              <p>For uphill trail clip.</p>
-              <span>Analyze hill form →</span>
-            </button>
-          </section>
+      <section className="mode-grid three-modes mode-grid-v2">
+        <button className="mode-card road-card" onClick={() => chooseRun("road")}>
+          <div className="mode-icon"></div>
+          <h2>Normal Run</h2>
+          <p>Best for road runs, track workouts, and easy runs.</p>
+          <span>Analyze road form →</span>
+        </button>
 
-<section className="feedback-section">
-  <h2>Help Improve Perfect Path</h2>
+        <button className="mode-card trail-card" onClick={() => chooseRun("flat_trail")}>
+          <div className="mode-icon"></div>
+          <h2>Flat Trail</h2>
+          <p>For flatter trails where terrain varies but not a significant elevation gain.</p>
+          <span>Analyze flat trail →</span>
+        </button>
 
-  <p>
-    Share your experience on the site. Tell what you loved and what can be improved. Your feedback is valued and thank you in advance.
-  </p>
-
-  <a
-    href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="feedback-button"
-  >
-    💬 Give Feedback
-  </a>
-</section>
-
-</main>
-      )}
+        <button className="mode-card hill-card" onClick={() => chooseRun("trail_hill")}>
+          <div className="mode-icon"></div>
+          <h2>Hill Trail</h2>
+          <p>For uphill trail clips.</p>
+          <span>Analyze hill form →</span>
+        </button>
+      </section>
+    </section>
+  </main>
+)}
 
       {screen === "analyze" && (
         <main className="analysis-page">
