@@ -226,24 +226,22 @@ const buildChartData = () => {
       </div>
 
       <div className="hero-content-v2">
-        <h1>
-          Find Your
-          <span>Perfect Path</span>
-        </h1>
+  <h1>
+    Find Your
+    <span>Perfect Path</span>
+  </h1>
 
-        <p>
-          Upload a running clip and receive personalized insights to improve
-          your form and performance.
-        </p>
+  <p>
+    Upload a running clip and receive personalized insights to improve
+    your form and performance.
+  </p>
+</div>  
 
-        <button className="hero-cta" onClick={() => chooseRun("road")}>
-          Analyze My Run →
-        </button>
-      </div>
-
-      <section className="mode-grid mode-grid-v2">
+<section className="mode-grid mode-grid-v2">
         <button className="mode-card road-card" onClick={() => chooseRun("road")}>
-          <div className="mode-icon"></div>
+          <div className="mode-icon">
+            
+          </div>
           <h2>Normal Run</h2>
           <p>Best for road runs, track workouts, and easy runs.</p>
           <span>Analyze road form →</span>
