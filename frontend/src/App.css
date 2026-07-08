@@ -900,4 +900,81 @@ body,
 
 .mode-grid-v2 .mode-card p {
   font-size: 18px;
+}/* Upload area */
+
+.upload-zone {
+  background: rgba(255,255,255,.72);
+  border: 2px dashed rgba(135,82,190,.28);
+  border-radius: 28px;
+  padding: 42px;
+  transition: .25s;
+}
+
+.upload-zone:hover {
+  border-color: #9b59d0;
+  box-shadow: 0 14px 40px rgba(108,55,170,.14);
+}/* Choose File */
+
+.upload-zone input[type="file"]::file-selector-button{
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  cursor: pointer;
+
+  color: white;
+  font-weight: 700;
+
+  background: linear-gradient(
+      135deg,
+      #ffb46a,
+      #d86ea8,
+      #7f4ec9
+  );
+
+  transition:.25s;
+}
+
+.upload-zone input[type="file"]::file-selector-button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(120,70,190,.35);
+}/* Analyze button */
+
+.primary-button{
+  border:none;
+  border-radius:18px;
+  padding:18px 42px;
+
+  color:white;
+  font-weight:700;
+  font-size:18px;
+
+  background:linear-gradient(
+      135deg,
+      #8b4cd4,
+      #6d36bf
+  );
+
+  box-shadow:0 16px 35px rgba(109,54,191,.28);
+
+  transition:.25s;
+}
+
+.primary-button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 22px 45px rgba(109,54,191,.4);
+}/* Back button */
+
+.back-button{
+  background:white;
+  border:1px solid rgba(127,78,201,.18);
+  border-radius:999px;
+  padding:14px 28px;
+  font-weight:700;
+
+  transition:.25s;
+}
+
+.back-button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(120,70,190,.12);
 }
