@@ -232,8 +232,8 @@ const buildChartData = () => {
   </h1>
 
   <p>
-    Upload a running clip and receive personalized insights to improve
-    your form and performance.
+    Upload a 10 second running clip and receive personalized guidance to improve
+    your form and get shoes targeted for you.
   </p>
 </div>  
 
@@ -293,12 +293,9 @@ const buildChartData = () => {
                 onChange={(e) => setVideo(e.target.files[0])}
               />
 
-              {video ? (
-                <p className="selected-file">Selected: {video.name}</p>
-              ) : (
-                <p className="selected-file muted">No video selected yet.</p>
-              )}
-
+              {video && (
+  <p className="selected-file">✓ {video.name}</p>
+)}
               <button className="primary-button" onClick={analyzeRun} disabled={loading}>
                 Analyze Run
               </button>
