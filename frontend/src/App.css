@@ -818,3 +818,52 @@ button:hover {
     padding: 26px;
   }
 }
+/* FINAL HOMEPAGE FIXES */
+
+.app-shell {
+  background: #fff7ef;
+}
+
+.navbar {
+  height: 76px;
+  max-width: 100%;
+  padding: 0 34px;
+}
+
+.nav-actions {
+  margin-left: auto;
+}
+
+.sunrise-hero {
+  min-height: calc(100vh - 76px);
+  max-width: 100%;
+  padding-top: 52px;
+}
+
+.hero-content-v2 {
+  margin-left: 7%;
+  text-align: left;
+}
+
+.hero-content-v2 h1 {
+  max-width: 420px;
+}
+
+.hero-content-v2 p {
+  max-width: 430px;
+}
+
+.mode-grid-v2 {
+  margin-top: 42px;
+}
+
+.mode-grid-v2 .mode-card {
+  min-height: 255px;
+}
+
+/* fixes navbar weird second-row look */
+.navbar > .nav-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
