@@ -977,4 +977,27 @@ body,
 .back-button:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 24px rgba(120,70,190,.12);
+}.analysis-page {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(circle at top left,
+      rgba(255,196,120,.18),
+      transparent 32%),
+
+    radial-gradient(circle at top right,
+      rgba(190,120,255,.14),
+      transparent 34%),
+
+    #fff8f2;
+}.analysis-card{
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.45);
+
+    box-shadow:
+        0 30px 70px rgba(67,28,120,.12);
+
+    border-radius:36px;
 }
