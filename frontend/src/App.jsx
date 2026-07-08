@@ -168,8 +168,25 @@ const buildChartData = () => {
   <button className="brand-button" onClick={goHome}>
     <span className="brand-mark">PP</span>
     <span>Perfect Path</span>
-  </button> 
-</nav> 
+  </button>
+
+  <div className="nav-actions">
+    <button className="nav-link" onClick={() => setShowFounder(true)}>
+      About Founder
+    </button>
+
+    {user ? (
+      <button className="nav-link nav-signin" onClick={logout}>
+        Sign out
+      </button>
+    ) : (
+      <button className="nav-link nav-signin" onClick={loginWithGoogle}>
+        Sign in
+      </button>
+    )}
+  </div>
+</nav>
+
 {showFounder && (
   <div className="modal-backdrop" onClick={() => setShowFounder(false)}>
     <div className="founder-modal" onClick={(e) => e.stopPropagation()}>
@@ -183,26 +200,13 @@ const buildChartData = () => {
         Perfect Path was created by Hrudhay, a high school runner from San Jose.
         After seeing how small form issues could lead to pain, missed races, and
         confusion for newer runners, I built Perfect Path to help runners better
-        understand their form, track improvement, and get shoe suggestions based on their form, not just reviews on google.
+        understand their form, track improvement, and get shoe suggestions based
+        on their form.
       </p>
     </div>
   </div>
 )}
-  <div className="nav-actions">
-  <button className="nav-link" onClick={() => setShowFounder(true)}>
-    About Founder
-  </button>
 
-  {user ? (
-    <button className="nav-link nav-signin" onClick={logout}>
-      Sign out
-    </button>
-  ) : (
-    <button className="nav-link nav-signin" onClick={loginWithGoogle}>
-      Sign in
-    </button>
-  )}
-</div>
 
       {screen === "home" && (
   <main className="home home-v2">
