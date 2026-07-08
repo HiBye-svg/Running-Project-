@@ -1000,4 +1000,22 @@ body,
         0 30px 70px rgba(67,28,120,.12);
 
     border-radius:36px;
+}/* Analyze page background that actually shows */
+
+.analysis-page {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 55px 70px 90px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 196, 120, 0.28), transparent 32%),
+    radial-gradient(circle at 85% 15%, rgba(155, 89, 208, 0.22), transparent 34%),
+    linear-gradient(135deg, #fff7ef 0%, #fff0eb 45%, #f7e9ff 100%);
+}
+
+.analysis-card {
+  max-width: 1120px;
+  margin: 30px auto 0;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(18px);
 }
