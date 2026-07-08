@@ -22,6 +22,7 @@ function App() {
   const [footWidth, setFootWidth] = useState("");
   const [shoeSuggestions, setShoeSuggestions] = useState(null);
   const [history, setHistory] = useState([]);
+  const [showFounder, setShowFounder] = useState(false);
   async function loginWithGoogle() {
   try {
     const result = await signInWithPopup(auth, provider);
@@ -174,13 +175,44 @@ console.log(buildChartData());
   🚧 Coming Soon: AI-powered shoe recommendations based on your running form analysis, and foot width.
 </div> 
       <nav className="navbar">
-        <button className="brand-button" onClick={goHome}>
-          <span className="brand-mark">PP</span>
-          <span>Perfect Path</span>
-        </button>
+  <button className="brand-button" onClick={goHome}>
+    <span className="brand-mark">PP</span>
+    <span>Perfect Path</span>
+  </button>
+{showFounder && (
+  <div className="modal-backdrop" onClick={() => setShowFounder(false)}>
+    <div className="founder-modal" onClick={(e) => e.stopPropagation()}>
+      <button className="modal-close" onClick={() => setShowFounder(false)}>
+        ×
+      </button>
 
-        <div className="nav-pill">70+ shoe choices</div>
-      </nav>
+      <p className="eyebrow">About Founder</p>
+      <h2>Built by a high school runner.</h2>
+      <p>
+        Perfect Path was created by Hrudhay, a high school runner from San Jose.
+        After seeing how small form issues could lead to pain, missed races, and
+        confusion for newer runners, I built Perfect Path to help runners better
+        understand their form, track improvement, and get shoe suggestions based on their form, not just reviews on google.
+      </p>
+    </div>
+  </div>
+)}
+  <div className="nav-actions">
+    <button className="nav-link" onClick={() => setShowFounder(true)}>
+      About Founder
+    </button>
+
+    {user ? (
+      <button className="nav-link" onClick={logout}>
+        Sign out
+      </button>
+    ) : (
+      <button className="nav-link nav-signin" onClick={loginWithGoogle}>
+        Sign in
+      </button>
+    )}
+  </div>
+</nav>
 
       {screen === "home" && (
         <main className="home">
@@ -291,7 +323,21 @@ Sign in with Google
             <div className="runner-scene">
               <div className="sun"></div>
               <div className="path"></div>
-              <div className="runner">🏃</div>
+              <div className="pose-runner">
+  <span className="head"></span>
+  <span className="body"></span>
+  <span className="arm arm-left"></span>
+  <span className="arm arm-right"></span>
+  <span className="leg leg-left"></span>
+  <span className="leg leg-right"></span>
+</div>
+
+<div className="footprints">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
               <div className="mini-tree left-tree"></div>
               <div className="mini-tree right-tree"></div>
             </div>
