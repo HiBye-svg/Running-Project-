@@ -137,20 +137,31 @@ const buildChartData = () => {
   return history.slice(-6).map((run, index) => {
     const row = {
       run: `Run ${index + 1}`,
+      overstride: 0,
+      forwardLean: 0,
+      armStiffness: 0,
+      sideSway: 0,
     };
 
-    run.issues.forEach((issue) => {
-      row[issue.issue.replace("Possible ", "")] =
+    run.issues?.forEach((issue) => {
+      const name = issue.issue.toLowerCase();
+      const value =
         typeof issue.frequency_percent === "number"
           ? issue.frequency_percent
           : issue.detected
           ? 100
           : 0;
+
+      if (name.includes("overstride")) row.overstride = value;
+      if (name.includes("forward lean")) row.forwardLean = value;
+      if (name.includes("elbow") || name.includes("arm")) row.armStiffness = value;
+      if (name.includes("sway")) row.sideSway = value;
     });
 
     return row;
   });
-}
+};
+console.log(buildChartData());
   return (
     <div className="app-shell">
       <div className="forest-bg">
