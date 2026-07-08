@@ -924,4 +924,43 @@ body {
 
 .hero-runner {
   bottom: 185px;
+}/* EMERGENCY CLEAN HERO FIX */
+
+body,
+.app-shell {
+  background: #fff7ef !important;
+}
+
+.sunrise-hero {
+  min-height: calc(100vh - 72px);
+  width: 100%;
+  padding: 70px 40px 80px;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 198, 132, 0.9), transparent 30%),
+    radial-gradient(circle at 70% 18%, rgba(255, 155, 190, 0.65), transparent 34%),
+    linear-gradient(135deg, #ffe3bf 0%, #f6a1ad 45%, #7a4e91 100%) !important;
+  overflow: hidden;
+}
+
+.sunrise-mountains,
+.sunrise-trail,
+.hero-runner,
+.hero-feature-strip {
+  display: none !important;
+}
+
+.hero-content-v2 {
+  max-width: 430px;
+  margin: 0 auto 0 8%;
+  padding-top: 0;
+}
+
+.mode-grid-v2 {
+  max-width: 920px;
+  margin: 48px auto 0;
+}
+
+.mode-grid-v2 .mode-card {
+  min-height: 235px;
+  background: rgba(255, 248, 244, 0.92);
 }
