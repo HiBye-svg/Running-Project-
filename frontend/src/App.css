@@ -1018,4 +1018,12 @@ body,
   margin: 30px auto 0;
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(18px);
+}.navbar{
+    background: linear-gradient(
+        180deg,
+        rgba(255,239,222,.95),
+        rgba(255,247,239,.88)
+    );
+
+    backdrop-filter: blur(14px);
 }
