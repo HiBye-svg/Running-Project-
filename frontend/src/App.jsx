@@ -206,9 +206,11 @@ console.log(buildChartData());
 
       {screen === "home" && (
   <main className="home home-v2">
-    <section className="hero-scene">
-      <div className="hero-mountains"></div>
-      <div className="hero-trail"></div>
+    <section className="sunrise-hero">
+      <div className="sunrise-bg"></div>
+      <div className="sunrise-mountains back"></div>
+      <div className="sunrise-mountains front"></div>
+      <div className="sunrise-trail"></div>
 
       <div className="hero-runner">
         <span className="head"></span>
@@ -219,15 +221,23 @@ console.log(buildChartData());
         <span className="leg leg-right"></span>
       </div>
 
-      <section className="hero hero-v2">
-        <h1>Find Your Own Perfect Path</h1>
-        <p className="hero-copy">
-          Upload a 10 second video, review your form, track improvement,
-          and get shoe suggestions built around your run type.
-        </p>
-      </section>
+      <div className="hero-content-v2">
+        <h1>
+          Find Your
+          <span>Perfect Path</span>
+        </h1>
 
-      <section className="mode-grid three-modes mode-grid-v2">
+        <p>
+          Upload a running clip and receive personalized insights to improve
+          your form and performance.
+        </p>
+
+        <button className="hero-cta" onClick={() => chooseRun("road")}>
+          Analyze My Run →
+        </button>
+      </div>
+
+      <section className="mode-grid mode-grid-v2">
         <button className="mode-card road-card" onClick={() => chooseRun("road")}>
           <div className="mode-icon"></div>
           <h2>Normal Run</h2>
@@ -249,6 +259,12 @@ console.log(buildChartData());
           <span>Analyze hill form →</span>
         </button>
       </section>
+
+      <div className="hero-feature-strip">
+        <div>Accurate Analysis</div>
+        <div>Clear Guidance</div>
+        <div>Your Best Run</div>
+      </div>
     </section>
   </main>
 )}
