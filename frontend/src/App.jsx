@@ -162,23 +162,14 @@ const buildChartData = () => {
     return row;
   });
 };
-console.log(buildChartData());
   return (
-    <div className="app-shell">
-      <div className="forest-bg">
-        <div className="tree tree-one"></div>
-        <div className="tree tree-two"></div>
-        <div className="tree tree-three"></div>
-        <div className="tree tree-four"></div>
-      </div>
-<div className="coming-soon-banner">
-  🚧 Coming Soon: AI-powered shoe recommendations based on your running form analysis, and foot width.
-</div> 
-      <nav className="navbar">
+  <div className="app-shell">
+    <nav className="navbar">
   <button className="brand-button" onClick={goHome}>
     <span className="brand-mark">PP</span>
     <span>Perfect Path</span>
-  </button>
+  </button> 
+</nav> 
 {showFounder && (
   <div className="modal-backdrop" onClick={() => setShowFounder(false)}>
     <div className="founder-modal" onClick={(e) => e.stopPropagation()}>
@@ -198,11 +189,20 @@ console.log(buildChartData());
   </div>
 )}
   <div className="nav-actions">
-    <button className="nav-link" onClick={() => setShowFounder(true)}>
-      About Founder
+  <button className="nav-link" onClick={() => setShowFounder(true)}>
+    About Founder
+  </button>
+
+  {user ? (
+    <button className="nav-link nav-signin" onClick={logout}>
+      Sign out
     </button>
-  </div>
-</nav>
+  ) : (
+    <button className="nav-link nav-signin" onClick={loginWithGoogle}>
+      Sign in
+    </button>
+  )}
+</div>
 
       {screen === "home" && (
   <main className="home home-v2">
