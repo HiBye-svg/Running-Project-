@@ -396,7 +396,14 @@ const buildChartData = () => {
                   <span>{issue.detected ? "Detected" : "Clear"}</span>
                 </div>
 <section className="feedback-card">
-  <h2>Progress Graph</h2>
+  <div className="history-header">
+    <h2>Progress Graph</h2>
+
+    <button className="clear-history-btn" onClick={clearHistory}>
+      Clear History
+    </button>
+  </div>
+
   <p>Tracks your form trends across your recent runs.</p>
 
   <div className="chart-box">

@@ -1303,4 +1303,24 @@ transform:none;
 .clear-history-btn:hover {
   background: #c9302c;
   transform: translateY(-2px);
+}.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.clear-history-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #ff9b78, #8a46d8);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .2s ease;
+}
+
+.clear-history-btn:hover {
+  transform: translateY(-2px);
 }
