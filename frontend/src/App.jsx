@@ -53,36 +53,67 @@ async function logout() {
       return;
     }
 
-    setLoading(true);
-    setScreen("loading");
-    setResult(null);
-    setShoeSuggestions(null);
+    async function clearHistory() {
+  const confirmed = window.confirm(
+    "Are you sure you want to clear your run history?"
+  );
 
-    const formData = new FormData();
-    formData.append("file", video);
-    formData.append("run_type", runType);
+  if (!confirmed) return;
 
-    try {
-     const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space/analyze", {
-  method: "POST",
-  body: formData,
-});
+  try {
+    await fetch("https://hibye-svg-perfect-path-backend.hf.space/history", {
+      method: "DELETE",
+    });
 
-      const data = await response.json();
+    setHistory([]);
+  } catch (error) {
+    console.error("Failed to clear history:", error);
+  }
+}
 
-      setResult(data);
-      const historyResponse = await fetch("https://hibye-svg-perfect-path-backend.hf.space/history");
-const historyData = await historyResponse.json();
-setHistory(historyData.history);
-      setScreen("results");
-    } catch (error) {
-      alert("Something went wrong while analyzing. Check your backend terminal.");
-      setScreen("analyze");
-    }
-
-    setLoading(false);
+async function analyzeRun() {
+  if (!video) {
+    alert("Please choose a video first.");
+    return;
   }
 
+  setLoading(true);
+  setScreen("loading");
+  setResult(null);
+  setShoeSuggestions(null);
+
+  const formData = new FormData();
+  formData.append("file", video);
+  formData.append("run_type", runType);
+
+  try {
+    const response = await fetch(
+      "https://hibye-svg-perfect-path-backend.hf.space/analyze",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    setResult(data);
+
+    const historyResponse = await fetch(
+      "https://hibye-svg-perfect-path-backend.hf.space/history"
+    );
+    const historyData = await historyResponse.json();
+
+    setHistory(historyData.history);
+    setScreen("results");
+  } catch (error) {
+    alert("Something went wrong while analyzing. Check your backend terminal.");
+    setScreen("analyze");
+  }
+
+  setLoading(false);
+}
+  }
   async function getShoeSuggestions() {
     if (!footWidth) {
       alert("Please select your foot width first.");

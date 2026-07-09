@@ -29,6 +29,7 @@ class ShoeRequest(BaseModel):
     foot_width: str
     issues: list
     run_type: str = "road"  # road, flat_trail, trail_hill
+    feedback: str
 
 
 @app.get("/")
@@ -55,12 +56,12 @@ def recommend_shoes(request: ShoeRequest):
     shoes = get_shoe_recommendations(
         request.foot_width,
         request.issues,
-        request.run_type
+        request.run_type,
+        request.feedback
     )
     return {"shoes": shoes}
 
 
-# THE FIX: Moved flat against the left margin so it's its own independent route!
 @app.get("/history")
 def get_history():
     history_file = "run_history.json"
@@ -72,3 +73,13 @@ def get_history():
         history = json.load(file)
 
     return {"history": history}
+
+
+@app.delete("/history")
+def clear_history():
+    history_file = "run_history.json"
+
+    with open(history_file, "w") as file:
+        json.dump([], file)
+
+    return {"message": "History cleared"}
