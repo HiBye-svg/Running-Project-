@@ -1201,8 +1201,8 @@ body,
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 52%;
+  bottom: 130px;
+  height: 46%;
   z-index: 1;
   pointer-events: none;
 
@@ -1210,25 +1210,4 @@ body,
   background-repeat: no-repeat;
   background-position: bottom center;
   background-size: cover;
-}
-
-.sunrise-bg,
-.sunrise-mountains,
-.sunrise-trail,
-.hero-runner,
-.hero-content-v2,
-.mode-grid-v2,
-.hero-feature-strip {
-  position: relative;
-}
-
-.sunrise-bg {
-  position: absolute;
-  z-index: 0;
-}
-
-.hero-content-v2,
-.mode-grid-v2,
-.hero-feature-strip {
-  z-index: 5;
 }
