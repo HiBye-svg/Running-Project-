@@ -323,7 +323,7 @@ const buildChartData = () => {
 
             <h2>Analyzing your run...</h2>
             <p>
-              Perfect Path is checking movement patterns, comparing your run, and preparing feedback.
+              Wait around 2 minutes and 30 seconds for video to finish analyzing
             </p>
 
             <div className="loading-bar">
