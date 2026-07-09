@@ -365,122 +365,121 @@ const buildChartData = () => {
       )}
 
       {screen === "results" && result && (
-        <main className="results-page">
-          <div className="results-header">
-            <button className="back-button" onClick={goBackToAnalyze}>
-              ← Analyze another
-            </button>
-            <button className="back-button" onClick={goHome}>
-              Home
-            </button>
+  <main className="results-page">
+    <div className="results-header">
+      <button className="back-button" onClick={goBackToAnalyze}>
+        ← Analyze another
+      </button>
+      <button className="back-button" onClick={goHome}>
+        Home
+      </button>
+    </div>
+
+    <section className="results-title">
+      <p className="eyebrow">{isTrail ? "Trail / Hill Results" : "Normal Run Results"}</p>
+      <h1>Your analysis is ready.</h1>
+      <p>
+        {isTrail
+          ? "Trail movement is judged differently because hills and uneven ground naturally change form."
+          : "Road movement is analyzed using your standard form metrics."}
+      </p>
+    </section>
+
+    <section className="issue-grid">
+      {result.issues.map((issue, index) => (
+        <div
+          className={`issue-card ${issue.detected ? "issue-detected" : "issue-clear"}`}
+          key={index}
+        >
+          <div className="issue-top">
+            <h3>{issue.issue.replace("Possible ", "")}</h3>
+            <span>{issue.detected ? "Detected" : "Clear"}</span>
           </div>
 
-          <section className="results-title">
-            <p className="eyebrow">{isTrail ? "Trail / Hill Results" : "Normal Run Results"}</p>
-            <h1>Your analysis is ready.</h1>
-            <p>
-              {isTrail
-                ? "Trail movement is judged differently because hills and uneven ground naturally change form."
-                : "Road movement is analyzed using your standard form metrics."}
-            </p>
-          </section>
-
-          <section className="issue-grid">
-            {result.issues.map((issue, index) => (
-              <div
-                className={`issue-card ${issue.detected ? "issue-detected" : "issue-clear"}`}
-                key={index}
-              >
-                <div className="issue-top">
-                  <h3>{issue.issue.replace("Possible ", "")}</h3>
-                  <span>{issue.detected ? "Detected" : "Clear"}</span>
-                </div>
-<section className="feedback-card">
-  <div className="history-header">
-    <h2>Progress Graph</h2>
-
-    <button className="clear-history-btn" onClick={clearHistory}>
-      Clear History
-    </button>
-  </div>
-
-  <p>Tracks your form trends across your recent runs.</p>
-
-  <div className="chart-box">
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={buildChartData()}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="run" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="overstride" name="Overstride" strokeWidth={3} />
-        <Line type="monotone" dataKey="forwardLean" name="Forward Lean" strokeWidth={3} />
-        <Line type="monotone" dataKey="armStiffness" name="Arm Stiffness" strokeWidth={3} />
-        <Line type="monotone" dataKey="sideSway" name="Side Sway" strokeWidth={3} />
-      </LineChart>
-    </ResponsiveContainer>
-  </div>
-</section>
-                <p className="issue-frequency">{issue.frequency_percent}%</p>
-                <p className="issue-time">
-                  {issue.time_ranges.length > 0
-                    ? issue.time_ranges.join(", ")
-                    : "No major time range"}
-                </p>
-              </div>
-            ))}
-          </section>
-
-          <p className="disclaimer">
-            Results are based on video movement analysis and are not medical or diagnostic advice.
+          <p className="issue-frequency">{issue.frequency_percent}%</p>
+          <p className="issue-time">
+            {issue.time_ranges.length > 0
+              ? issue.time_ranges.join(", ")
+              : "No major time range"}
           </p>
+        </div>
+      ))}
+    </section>
 
-          <section className="feedback-card">
-            <h2>AI Feedback</h2>
-            <p>{result.feedback}</p>
-          </section>
+    <section className="feedback-card">
+      <div className="history-header">
+        <h2>Progress Graph</h2>
+        <button className="clear-history-btn" onClick={clearHistory}>
+          Clear History
+        </button>
+      </div>
 
-          <section className="shoe-card">
-            <div>
-              <p className="eyebrow">Optional</p>
-              <h2>Shoe Suggestions</h2>
-              <p>
-                Select your foot width to get three shoe options from the database.
-              </p>
+      <p>Tracks your form trends across your recent runs.</p>
+
+      <div className="chart-box">
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={buildChartData()}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="run" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="overstride" name="Overstride" strokeWidth={3} />
+            <Line type="monotone" dataKey="forwardLean" name="Forward Lean" strokeWidth={3} />
+            <Line type="monotone" dataKey="armStiffness" name="Arm Stiffness" strokeWidth={3} />
+            <Line type="monotone" dataKey="sideSway" name="Side Sway" strokeWidth={3} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </section>
+
+    <p className="disclaimer">
+      Results are based on video movement analysis and are not medical or diagnostic advice.
+    </p>
+
+    <section className="feedback-card">
+      <h2>AI Feedback</h2>
+      <p>{result.feedback}</p>
+    </section>
+
+    <section className="shoe-card">
+      <div>
+        <p className="eyebrow">Optional</p>
+        <h2>Shoe Suggestions</h2>
+        <p>Select your foot width to get three shoe options from the database.</p>
+      </div>
+
+      <div className="shoe-controls">
+        <select value={footWidth} onChange={(e) => setFootWidth(e.target.value)}>
+          <option value="">Select foot width</option>
+          <option value="narrow">Narrow</option>
+          <option value="regular">Regular</option>
+          <option value="wide">Wide</option>
+          <option value="extra wide">Extra Wide</option>
+        </select>
+
+        <button className="primary-button" onClick={getShoeSuggestions}>
+          Get Shoe Suggestions
+        </button>
+      </div>
+
+      {shoeSuggestions && (
+        <div className="shoe-grid">
+          {shoeSuggestions.map((shoe, index) => (
+            <div className="shoe-result-card" key={index}>
+              <span className="shoe-tier">{shoe.tier}</span>
+              <h3>
+                {shoe.brand} {shoe.model}
+              </h3>
+              <p>{shoe.category}</p>
+              <strong>${shoe.price}</strong>
+              <p>{shoe.reason}</p>
             </div>
-
-            <div className="shoe-controls">
-              <select value={footWidth} onChange={(e) => setFootWidth(e.target.value)}>
-                <option value="">Select foot width</option>
-                <option value="narrow">Narrow</option>
-                <option value="regular">Regular</option>
-                <option value="wide">Wide</option>
-                <option value="extra wide">Extra Wide</option>
-              </select>
-
-              <button className="primary-button" onClick={getShoeSuggestions}>
-                Get Shoe Suggestions
-              </button>
-            </div>
-
-            {shoeSuggestions && (
-              <div className="shoe-grid">
-                {shoeSuggestions.map((shoe, index) => (
-                  <div className="shoe-result-card" key={index}>
-                    <span className="shoe-tier">{shoe.tier}</span>
-                    <h3>
-                      {shoe.brand} {shoe.model}
-                    </h3>
-                    <p>{shoe.category}</p>
-                    <strong>${shoe.price}</strong>
-                    <p>{shoe.reason}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-          </main>
+          ))}
+        </div>
       )}
+    </section>
+  </main>
+)}
     </div>
   );
 }
