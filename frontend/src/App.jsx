@@ -310,14 +310,6 @@ const buildChartData = () => {
             <div className="runner-scene">
               <div className="sun"></div>
               <div className="path"></div>
-              <div className="pose-runner">
-  <span className="head"></span>
-  <span className="body"></span>
-  <span className="arm arm-left"></span>
-  <span className="arm arm-right"></span>
-  <span className="leg leg-left"></span>
-  <span className="leg leg-right"></span>
-</div>
 
 <div className="footprints">
   <span></span>
