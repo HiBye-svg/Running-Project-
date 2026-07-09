@@ -221,6 +221,11 @@ const buildChartData = () => {
       <div className="sunrise-bg"></div>
       <div className="sunrise-mountains back"></div>
       <div className="sunrise-mountains front"></div>
+      <div className="hero-birds">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
       <div className="sunrise-trail"></div>
 
       <div className="hero-runner">
