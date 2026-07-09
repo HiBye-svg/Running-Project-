@@ -573,10 +573,25 @@ button:hover {
   animation: footstep 2s infinite;
 }
 
-.footprints span:nth-child(1) { left: 49%; bottom: 36px; animation-delay: 0s; }
-.footprints span:nth-child(2) { left: 52%; bottom: 66px; animation-delay: .5s; }
-.footprints span:nth-child(3) { left: 48%; bottom: 96px; animation-delay: 1s; }
-.footprints span:nth-child(4) { left: 52%; bottom: 126px; animation-delay: 1.5s; }
+.footprints span:nth-child(1) {
+  left: 50%;
+  bottom: 18px;
+}
+
+.footprints span:nth-child(2) {
+  left: 48%;
+  bottom: 55px;
+}
+
+.footprints span:nth-child(3) {
+  left: 51%;
+  bottom: 92px;
+}
+
+.footprints span:nth-child(4) {
+  left: 49%;
+  bottom: 128px;
+}
 
 @keyframes loadingRunForward {
   0% {
