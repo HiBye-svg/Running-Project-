@@ -1169,4 +1169,29 @@ body,
     opacity: 0;
     transform: translateY(-20px) scale(.9) rotate(8deg);
   }
+}.feedback-btn{
+  background: linear-gradient(
+      135deg,
+      #ffb46a,
+      #d86ea8,
+      #7f4ec9
+  );
+
+  color:#fff;
+  border:none;
+  border-radius:999px;
+  padding:14px 24px;
+  font-weight:700;
+  text-decoration:none;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition:.25s;
+}
+
+.feedback-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(127,78,201,.30);
 }

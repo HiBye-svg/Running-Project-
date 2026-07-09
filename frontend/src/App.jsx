@@ -174,7 +174,14 @@ const buildChartData = () => {
     <button className="nav-link" onClick={() => setShowFounder(true)}>
       About Founder
     </button>
-
+  <a
+  className="nav-link feedback-btn"
+  href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=dialog"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  Feedback
+</a>
     {user ? (
       <button className="nav-link nav-signin" onClick={logout}>
         Sign out
