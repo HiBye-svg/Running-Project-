@@ -47,13 +47,7 @@ async function logout() {
     setScreen("analyze");
   }
 
-  async function analyzeRun() {
-    if (!video) {
-      alert("Please choose a video first.");
-      return;
-    }
-
-    async function clearHistory() {
+  async function clearHistory() {
   const confirmed = window.confirm(
     "Are you sure you want to clear your run history?"
   );
@@ -87,21 +81,16 @@ async function analyzeRun() {
   formData.append("run_type", runType);
 
   try {
-    const response = await fetch(
-      "https://hibye-svg-perfect-path-backend.hf.space/analyze",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space/analyze", {
+      method: "POST",
+      body: formData,
+    });
 
     const data = await response.json();
 
     setResult(data);
 
-    const historyResponse = await fetch(
-      "https://hibye-svg-perfect-path-backend.hf.space/history"
-    );
+    const historyResponse = await fetch("https://hibye-svg-perfect-path-backend.hf.space/history");
     const historyData = await historyResponse.json();
 
     setHistory(historyData.history);
@@ -113,7 +102,6 @@ async function analyzeRun() {
 
   setLoading(false);
 }
-  }
   async function getShoeSuggestions() {
     if (!footWidth) {
       alert("Please select your foot width first.");
