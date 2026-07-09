@@ -8,6 +8,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Legend,
   CartesianGrid,
 } from "recharts";
 import "./App.css";
@@ -180,6 +181,24 @@ const buildChartData = () => {
 
     return row;
   });
+};
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div className="custom-tooltip">
+      <p className="tooltip-title">{label}</p>
+      {payload.map((item) => (
+        <p key={item.dataKey} className="tooltip-row">
+          <span
+            className="tooltip-dot"
+            style={{ backgroundColor: item.color }}
+          ></span>
+          {item.name}: <strong>{item.value}%</strong>
+        </p>
+      ))}
+    </div>
+  );
 };
   return (
   <div className="app-shell">
@@ -406,35 +425,81 @@ const buildChartData = () => {
       ))}
     </section>
 
-    <section className="feedback-card">
-      <div className="history-header">
-        <h2>Progress Graph</h2>
-        <button className="clear-history-btn" onClick={clearHistory}>
-          Clear History
-        </button>
-      </div>
+   <LineChart data={buildChartData()}>
+  <CartesianGrid strokeDasharray="3 3" stroke="#e8e8e8" />
 
-      <p>Tracks your form trends across your recent runs.</p>
+  <XAxis dataKey="run" />
 
-      <div className="chart-box">
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={buildChartData()}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="run" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="overstride" name="Overstride" strokeWidth={3} />
-            <Line type="monotone" dataKey="forwardLean" name="Forward Lean" strokeWidth={3} />
-            <Line type="monotone" dataKey="armStiffness" name="Arm Stiffness" strokeWidth={3} />
-            <Line type="monotone" dataKey="sideSway" name="Side Sway" strokeWidth={3} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </section>
+  <YAxis
+    domain={[0, 100]}
+    label={{
+      value: "Issue %",
+      angle: -90,
+      position: "insideLeft"
+    }}
+  />
 
-    <p className="disclaimer">
-      Results are based on video movement analysis and are not medical or diagnostic advice.
-    </p>
+  <Tooltip content={<CustomTooltip />} />
+
+  {/* NEW */}
+  <Legend verticalAlign="top" height={36} />
+
+  <Line
+  type="monotone"
+  dataKey="overstride"
+  name="Overstride"
+  stroke="#8B5CF6"
+  strokeWidth={4}
+  dot={{ r: 5 }}
+  activeDot={{ r: 8 }}
+  isAnimationActive={true}
+  animationDuration={1200}
+  animationBegin={0}
+  animationEasing="ease-out"
+/>
+
+<Line
+  type="monotone"
+  dataKey="forwardLean"
+  name="Forward Lean"
+  stroke="#EC4899"
+  strokeWidth={4}
+  dot={{ r: 5 }}
+  activeDot={{ r: 8 }}
+  isAnimationActive={true}
+  animationDuration={1200}
+  animationBegin={150}
+  animationEasing="ease-out"
+/>
+
+<Line
+  type="monotone"
+  dataKey="armStiffness"
+  name="Arm Stiffness"
+  stroke="#3B82F6"
+  strokeWidth={4}
+  dot={{ r: 5 }}
+  activeDot={{ r: 8 }}
+  isAnimationActive={true}
+  animationDuration={1200}
+  animationBegin={300}
+  animationEasing="ease-out"
+/>
+
+  <Line
+  type="monotone"
+  dataKey="sideSway"
+  name="Side Sway"
+  stroke="#10B981"
+  strokeWidth={4}
+  dot={{ r: 5 }}
+  activeDot={{ r: 8 }}
+  isAnimationActive={true}
+  animationDuration={1200}
+  animationBegin={450}
+  animationEasing="ease-out"
+/>
+</LineChart>
 
     <section className="feedback-card">
       <h2>AI Feedback</h2>
