@@ -1194,4 +1194,41 @@ body,
 .feedback-btn:hover{
   transform:translateY(-2px);
   box-shadow:0 12px 30px rgba(127,78,201,.30);
+}/* Mountain background layer */
+
+.sunrise-hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52%;
+  z-index: 1;
+  pointer-events: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 520' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 330L130 220L250 310L420 120L590 330L760 180L930 335L1080 230L1240 345L1440 180V520H0Z' fill='%23432a5b' fill-opacity='0.42'/%3E%3Cpath d='M0 400L180 260L330 390L520 170L710 410L900 230L1080 420L1260 280L1440 410V520H0Z' fill='%231f172f' fill-opacity='0.82'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: cover;
+}
+
+.sunrise-bg,
+.sunrise-mountains,
+.sunrise-trail,
+.hero-runner,
+.hero-content-v2,
+.mode-grid-v2,
+.hero-feature-strip {
+  position: relative;
+}
+
+.sunrise-bg {
+  position: absolute;
+  z-index: 0;
+}
+
+.hero-content-v2,
+.mode-grid-v2,
+.hero-feature-strip {
+  z-index: 5;
 }
