@@ -1132,11 +1132,25 @@ body,
   box-shadow: 0 0 14px rgba(255, 210, 160, 0.28);
 }
 
-.footprints span:nth-child(1) { left: 49%; bottom: 52px; animation-delay: 0s; }
-.footprints span:nth-child(2) { left: 52%; bottom: 86px; animation-delay: .35s; }
-.footprints span:nth-child(3) { left: 48%; bottom: 120px; animation-delay: .7s; }
-.footprints span:nth-child(4) { left: 51%; bottom: 154px; animation-delay: 1.05s; }
+.footprints span:nth-child(1) {
+  left: 50%;
+  bottom: -18px;
+}
 
+.footprints span:nth-child(2) {
+  left: 48%;
+  bottom: 18px;
+}
+
+.footprints span:nth-child(3) {
+  left: 51%;
+  bottom: 54px;
+}
+
+.footprints span:nth-child(4) {
+  left: 49%;
+  bottom: 90px;
+}
 @keyframes footstep {
   0% {
     opacity: 0;
