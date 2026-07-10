@@ -1918,21 +1918,25 @@ transform:none;
 ========================================= */
 
 /* Trust strip beneath the hero description */
+/* Trust strip beneath the hero description */
 .hero-trust-strip {
   margin-top: 24px;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 11px;
+  flex-wrap: nowrap;
+  gap: 10px;
+  width: max-content;
+  max-width: 100%;
 
   color: rgba(35, 22, 52, 0.82);
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   font-weight: 800;
   letter-spacing: 0.01em;
 }
 
 .hero-trust-strip > span:not(.trust-divider) {
-  padding: 10px 15px;
+  padding: 9px 13px;
+  white-space: nowrap;
 
   background: rgba(255, 255, 255, 0.42);
   border: 1px solid rgba(255, 255, 255, 0.58);
@@ -1955,8 +1959,9 @@ transform:none;
 }
 
 .trust-divider {
+  flex-shrink: 0;
   color: rgba(94, 46, 125, 0.55);
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
 
 
