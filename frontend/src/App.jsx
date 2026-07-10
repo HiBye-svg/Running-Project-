@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { auth, provider } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
 import {
@@ -12,6 +11,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import "./App.css";
+import { useEffect, useState } from "react";
 import {
   Award,
   Crown,
@@ -33,6 +33,13 @@ function App() {
   const [shoeSuggestions, setShoeSuggestions] = useState(null);
   const [history, setHistory] = useState([]);
   const [showFounder, setShowFounder] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
+  const loadingSteps = [
+  "Video uploaded",
+  "Extracting video frames",
+  "Detecting running pose",
+  "Generating your analysis",
+];
   async function loginWithGoogle() {
   try {
     const result = await signInWithPopup(auth, provider);
@@ -74,7 +81,21 @@ async function logout() {
     console.error("Failed to clear history:", error);
   }
 }
+useEffect(() => {
+  if (screen !== "loading") {
+    return;
+  }
 
+  setLoadingStep(0);
+
+  const interval = setInterval(() => {
+    setLoadingStep((currentStep) =>
+      Math.min(currentStep + 1, loadingSteps.length - 1)
+    );
+  }, 40000);
+
+  return () => clearInterval(interval);
+}, [screen]);
 async function analyzeRun() {
   if (!video) {
     alert("Please choose a video first.");
@@ -96,32 +117,41 @@ async function analyzeRun() {
       body: formData,
     });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    setResult(data);
+setResult(data);
 
-    const historyResponse = await fetch("https://hibye-svg-perfect-path-backend.hf.space/history");
-    const historyData = await historyResponse.json();
+const historyResponse = await fetch(
+  "https://hibye-svg-perfect-path-backend.hf.space/history"
+);
 
-    setHistory(historyData.history);
-    setScreen("results");
-  } catch (error) {
-    alert("Something went wrong while analyzing. Check your backend terminal.");
-    setScreen("analyze");
+const historyData = await historyResponse.json();
+
+setHistory(historyData.history);
+setLoadingStep(loadingSteps.length);
+
+setTimeout(() => {
+  setScreen("results");
+}, 500);
+
+} catch (error) {
+  alert("Something went wrong while analyzing. Check your backend terminal.");
+  setScreen("analyze");
+}
+
+setLoading(false);
+}
+
+async function getShoeSuggestions() {
+  if (!footWidth) {
+    alert("Please select your foot width first.");
+    return;
   }
 
-  setLoading(false);
-}
-  async function getShoeSuggestions() {
-    if (!footWidth) {
-      alert("Please select your foot width first.");
-      return;
-    }
-
-    if (!result) {
-      alert("Please analyze a run first.");
-      return;
-    }
+  if (!result) {
+    alert("Please analyze a run first.");
+    return;
+  }
 
     try {
       const response = await fetch("https://hibye-svg-perfect-path-backend.hf.space/shoes", {
@@ -473,9 +503,30 @@ const getShoeFeatures = (shoe) => {
             </div>
 
             <h2>Analyzing your run...</h2>
-            <p>
-              Wait around 2 minutes and 30 seconds for video to finish analyzing
-            </p>
+           <div className="loading-progress">
+  {loadingSteps.map((step, index) => {
+    const isComplete =
+  loadingStep === loadingSteps.length || index < loadingStep;
+
+const isActive =
+  loadingStep !== loadingSteps.length && index === loadingStep;
+
+    return (
+      <div
+        className={`loading-step ${
+          isComplete ? "complete" : isActive ? "active" : ""
+        }`}
+        key={step}
+      >
+        <div className="loading-step-icon">
+          {isComplete ? "✓" : isActive ? "↻" : ""}
+        </div>
+
+        <span>{step}</span>
+      </div>
+    );
+  })}
+</div>
 
             <div className="loading-bar">
               <div></div>

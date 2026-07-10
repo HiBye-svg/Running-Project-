@@ -1642,4 +1642,65 @@ transform:none;
   .upgraded-shoe-card.best-overall {
     order: -1;
   }
+}.loading-progress {
+  width: 100%;
+  max-width: 430px;
+  margin: 32px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.loading-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #9ca3af;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.loading-step-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+
+.loading-step.active {
+  color: #4c1d95;
+}
+
+.loading-step.active .loading-step-icon {
+  border-color: #6d28d9;
+  color: #6d28d9;
+  animation: loading-spin 1.2s linear infinite;
+}
+
+.loading-step.complete {
+  color: #166534;
+}
+
+.loading-step.complete .loading-step-icon {
+  border-color: #22c55e;
+  background: #22c55e;
+  color: white;
+}
+
+@keyframes loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
