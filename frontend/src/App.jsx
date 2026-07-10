@@ -219,9 +219,9 @@ async function getShoeSuggestions() {
     setFootWidth("");
   }
 
-  const isTrail =
-  runType === "trail_hill" ||
-  runType === "flat_trail";
+  const isFlatTrail = runType === "flat_trail";
+const isHillTrail = runType === "trail_hill";
+const isTrail = isFlatTrail || isHillTrail;
 const buildChartData = () => {
   return history.slice(-6).map((run, index) => {
     const row = {
@@ -495,13 +495,29 @@ const getShoeFeatures = (shoe) => {
           </button>
 
           <section className="analysis-card">
-            <p className="eyebrow">{isTrail ? "Trail / Hill Mode" : "Normal Run Mode"}</p>
-            <h1>{isTrail ? "Analyze your trail form." : "Analyze your road form."}</h1>
-            <p>
-              {isTrail
-                ? "Trail mode uses more forgiving thresholds for lean, stride, and terrain movement."
-                : "Road mode checks common form patterns like overstride, forward lean, elbows, and side sway."}
-            </p>
+            <p className="eyebrow">
+  {isHillTrail
+    ? "Hill Trail Mode"
+    : isFlatTrail
+    ? "Flat Trail Mode"
+    : "Normal Run Mode"}
+</p>
+
+<h1>
+  {isHillTrail
+    ? "Analyze your uphill trail form."
+    : isFlatTrail
+    ? "Analyze your flat trail form."
+    : "Analyze your road form."}
+</h1>
+
+<p>
+  {isHillTrail
+    ? "Hill trail mode accounts for uphill movement, stronger forward lean, shorter stride patterns, and uneven terrain."
+    : isFlatTrail
+    ? "Flat trail mode is better for terrain variation while checking stride, posture, and side-to-side movement."
+    : "Road mode checks common form patterns like overstride, forward lean, elbows, and side sway."}
+</p>
 
             <div
   className={`upload-zone upgraded-upload-zone ${
