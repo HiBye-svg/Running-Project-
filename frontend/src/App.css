@@ -1913,4 +1913,255 @@ transform:none;
   .analyze-upload-button {
     width: 100%;
   }
+}/* =========================================
+   FINAL HOMEPAGE POLISH
+========================================= */
+
+/* Trust strip beneath the hero description */
+.hero-trust-strip {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 11px;
+
+  color: rgba(35, 22, 52, 0.82);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.hero-trust-strip > span:not(.trust-divider) {
+  padding: 10px 15px;
+
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 999px;
+
+  box-shadow: 0 8px 22px rgba(35, 22, 52, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hero-trust-strip > span:not(.trust-divider):hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 12px 26px rgba(35, 22, 52, 0.12);
+}
+
+.trust-divider {
+  color: rgba(94, 46, 125, 0.55);
+  font-size: 1.15rem;
+}
+
+
+/* Slightly deeper and more professional hero gradient */
+.sunrise-bg {
+  background:
+    radial-gradient(
+      circle at 19% 18%,
+      rgba(255, 219, 167, 0.88) 0%,
+      rgba(255, 219, 167, 0) 36%
+    ),
+    linear-gradient(
+      120deg,
+      #f4b36f 0%,
+      #e998ad 48%,
+      #8a5b91 76%,
+      #55366f 100%
+    );
+}
+
+
+/* Animated Perfect Path headline gradient */
+.hero-content-v2 h1 > span {
+  display: block;
+
+  background: linear-gradient(
+    110deg,
+    #7d2d82,
+    #b13d8b,
+    #71319a,
+    #7d2d82
+  );
+
+  background-size: 250% 250%;
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  animation: perfect-path-gradient 14s ease infinite;
+}
+
+@keyframes perfect-path-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/* Card entrance animation */
+.mode-card {
+  opacity: 0;
+  transform: translateY(26px);
+
+  animation: mode-card-enter 0.7s ease forwards;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.mode-card:nth-child(1) {
+  animation-delay: 0.12s;
+}
+
+.mode-card:nth-child(2) {
+  animation-delay: 0.24s;
+}
+
+.mode-card:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+@keyframes mode-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Card hover movement */
+.mode-card:hover {
+  transform: translateY(-9px);
+  box-shadow: 0 28px 60px rgba(35, 22, 52, 0.2);
+}
+
+.mode-card .mode-icon {
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.mode-card:hover .mode-icon {
+  transform: scale(1.08);
+  filter: drop-shadow(0 8px 12px rgba(75, 35, 105, 0.18));
+}
+
+
+/* Slower, calmer bird motion */
+.hero-birds {
+  animation: birds-drift 15s ease-in-out infinite;
+}
+
+.hero-birds span:nth-child(1) {
+  animation: bird-float-one 5.5s ease-in-out infinite;
+}
+
+.hero-birds span:nth-child(2) {
+  animation: bird-float-two 6.5s ease-in-out infinite;
+}
+
+.hero-birds span:nth-child(3) {
+  animation: bird-float-three 7.5s ease-in-out infinite;
+}
+
+@keyframes birds-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-28px, -8px);
+  }
+}
+
+@keyframes bird-float-one {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes bird-float-two {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(4px) rotate(-1deg);
+  }
+}
+
+@keyframes bird-float-three {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+
+/* Mobile cleanup */
+@media (max-width: 720px) {
+  .hero-trust-strip {
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .hero-trust-strip > span:not(.trust-divider) {
+    padding: 8px 11px;
+    font-size: 0.8rem;
+  }
+
+  .trust-divider {
+    display: none;
+  }
+}
+
+
+/* Respect reduced-motion accessibility settings */
+@media (prefers-reduced-motion: reduce) {
+  .hero-content-v2 h1 > span,
+  .mode-card,
+  .hero-birds,
+  .hero-birds span {
+    animation: none !important;
+  }
+
+  .mode-card {
+    opacity: 1;
+    transform: none;
+  }
 }

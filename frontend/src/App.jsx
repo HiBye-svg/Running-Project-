@@ -445,6 +445,13 @@ const getShoeFeatures = (shoe) => {
     Upload a 10 second running clip and receive personalized guidance to improve
     your form and get shoes targeted for you.
   </p>
+  <div className="hero-trust-strip">
+  <span>AI Advice</span>
+  <span className="trust-divider">•</span>
+  <span>YOLO Pose Detection</span>
+  <span className="trust-divider">•</span>
+  <span>Personalized Shoe Matching</span>
+</div>
 </div>  
 
 <section className="mode-grid mode-grid-v2">
