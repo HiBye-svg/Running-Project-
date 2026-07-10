@@ -1416,4 +1416,231 @@ transform:none;
     opacity: 1;
     transform: translateY(0);
   }
+}.shoe-recommendation-context {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.shoe-context-label {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.shoe-context-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shoe-context-items span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: #334155;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.upgraded-shoe-grid {
+  align-items: stretch;
+  margin-top: 22px;
+}
+
+.upgraded-shoe-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 430px;
+  padding: 24px;
+  border-radius: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(248, 250, 252, 0.96)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.upgraded-shoe-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.14);
+  border-color: rgba(124, 58, 237, 0.35);
+}
+
+.upgraded-shoe-card.best-overall {
+  border: 2px solid rgba(124, 58, 237, 0.48);
+  box-shadow: 0 22px 50px rgba(124, 58, 237, 0.13);
+}
+
+.upgraded-shoe-card.best-overall::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #7c3aed, #3b82f6);
+}
+
+.shoe-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.shoe-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 8px 11px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.shoe-tier-badge.value-pick {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.shoe-tier-badge.best-overall {
+  color: #5b21b6;
+  background: #ede9fe;
+}
+
+.shoe-tier-badge.premium-choice {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.recommended-label {
+  color: #7c3aed;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.shoe-name-block {
+  min-height: 118px;
+}
+
+.shoe-brand {
+  margin: 0 0 5px;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.shoe-name-block h3 {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.shoe-category {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.shoe-divider {
+  height: 1px;
+  margin: 22px 0;
+  background: rgba(148, 163, 184, 0.22);
+}
+
+.shoe-features {
+  display: grid;
+  gap: 13px;
+}
+
+.shoe-features-title {
+  margin: 0 0 2px;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.shoe-feature-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.shoe-feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 9px;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.shoe-price-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.shoe-price-block span {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.shoe-price-block strong {
+  color: #0f172a;
+  font-size: 1.85rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 850px) {
+  .upgraded-shoe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .upgraded-shoe-card {
+    min-height: auto;
+  }
+
+  .upgraded-shoe-card.best-overall {
+    order: -1;
+  }
 }

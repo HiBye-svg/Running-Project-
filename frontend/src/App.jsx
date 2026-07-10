@@ -12,6 +12,15 @@ import {
   CartesianGrid,
 } from "recharts";
 import "./App.css";
+import {
+  Award,
+  Crown,
+  BadgeDollarSign,
+  ShieldCheck,
+  Footprints,
+  Activity,
+  Check,
+} from "lucide-react";
 
 function App() {
   const [screen, setScreen] = useState("home");
@@ -199,6 +208,98 @@ const CustomTooltip = ({ active, payload, label }) => {
       ))}
     </div>
   );
+};
+const getShoeTierInfo = (tier, index) => {
+  const normalizedTier = tier?.toLowerCase() || "";
+
+  if (normalizedTier.includes("budget") || index === 0) {
+    return {
+      label: "Value Pick",
+      className: "value-pick",
+      icon: BadgeDollarSign,
+    };
+  }
+
+  if (normalizedTier.includes("premium") || index === 2) {
+    return {
+      label: "Premium Choice",
+      className: "premium-choice",
+      icon: Crown,
+    };
+  }
+
+  return {
+    label: "Best Overall",
+    className: "best-overall",
+    icon: Award,
+  };
+};
+
+const getShoeFeatures = (shoe) => {
+  const reason = shoe.reason?.toLowerCase() || "";
+  const features = [];
+
+  if (
+    reason.includes("wide") ||
+    footWidth === "wide" ||
+    footWidth === "extra wide"
+  ) {
+    features.push({
+      text:
+        footWidth === "extra wide"
+          ? "Extra-wide fit support"
+          : "Wide fit available",
+      icon: Footprints,
+    });
+  }
+
+  if (
+    shoe.category?.toLowerCase().includes("stability") ||
+    reason.includes("stability") ||
+    reason.includes("support")
+  ) {
+    features.push({
+      text: "Stability-focused support",
+      icon: ShieldCheck,
+    });
+  }
+
+  if (reason.includes("overstride")) {
+    features.push({
+      text: "Selected for overstride support",
+      icon: Activity,
+    });
+  }
+
+  if (reason.includes("forward lean")) {
+    features.push({
+      text: "Supports more controlled form",
+      icon: Check,
+    });
+  }
+
+  if (runType === "trail_hill" || runType === "flat_trail") {
+    features.push({
+      text: "Suitable for trail running",
+      icon: Activity,
+    });
+  }
+
+  if (features.length < 3) {
+    features.push({
+      text: `${shoe.category} running design`,
+      icon: Check,
+    });
+  }
+
+  if (features.length < 3) {
+    features.push({
+      text: "Matched to your analysis",
+      icon: Check,
+    });
+  }
+
+  return features.slice(0, 3);
 };
   return (
   <div className="app-shell">
@@ -479,20 +580,87 @@ const CustomTooltip = ({ active, payload, label }) => {
       </div>
 
       {shoeSuggestions && (
-        <div className="shoe-grid">
-          {shoeSuggestions.map((shoe, index) => (
-            <div className="shoe-result-card" key={index}>
-              <span className="shoe-tier">{shoe.tier}</span>
-              <h3>
-                {shoe.brand} {shoe.model}
-              </h3>
-              <p>{shoe.category}</p>
-              <strong>${shoe.price}</strong>
-              <p>{shoe.reason}</p>
-            </div>
+  <>
+    <div className="shoe-recommendation-context">
+      <p className="shoe-context-label">Recommendations based on</p>
+
+      <div className="shoe-context-items">
+        <span>
+          <Footprints size={16} />
+          {footWidth
+            ? `${footWidth.charAt(0).toUpperCase() + footWidth.slice(1)} fit`
+            : "Selected fit"}
+        </span>
+
+        {result?.issues
+          ?.filter((issue) => issue.detected)
+          .slice(0, 2)
+          .map((issue, index) => (
+            <span key={index}>
+              <Check size={16} />
+              {issue.issue.replace("Possible ", "")}
+            </span>
           ))}
-        </div>
-      )}
+      </div>
+    </div>
+
+    <div className="shoe-grid upgraded-shoe-grid">
+      {shoeSuggestions.map((shoe, index) => {
+        const tierInfo = getShoeTierInfo(shoe.tier, index);
+        const TierIcon = tierInfo.icon;
+        const features = getShoeFeatures(shoe);
+
+        return (
+          <article
+            className={`shoe-result-card upgraded-shoe-card ${tierInfo.className}`}
+            key={index}
+          >
+            <div className="shoe-card-header">
+              <span className={`shoe-tier-badge ${tierInfo.className}`}>
+                <TierIcon size={16} strokeWidth={2} />
+                {tierInfo.label}
+              </span>
+
+              {tierInfo.className === "best-overall" && (
+                <span className="recommended-label">Recommended</span>
+              )}
+            </div>
+
+            <div className="shoe-name-block">
+              <p className="shoe-brand">{shoe.brand}</p>
+              <h3>{shoe.model}</h3>
+              <span className="shoe-category">{shoe.category}</span>
+            </div>
+
+            <div className="shoe-divider" />
+
+            <div className="shoe-features">
+              <p className="shoe-features-title">Why it fits your run</p>
+
+              {features.map((feature, featureIndex) => {
+                const FeatureIcon = feature.icon;
+
+                return (
+                  <div className="shoe-feature-row" key={featureIndex}>
+                    <span className="shoe-feature-icon">
+                      <FeatureIcon size={17} strokeWidth={2} />
+                    </span>
+                    <span>{feature.text}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="shoe-price-block">
+              <span>Typical price</span>
+              <strong>${shoe.price}</strong>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </>
+)}
     </section>
   </main>
 )}
