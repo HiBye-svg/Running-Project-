@@ -24,6 +24,7 @@ import {
 
 function App() {
   const [screen, setScreen] = useState("home");
+  const [dragActive, setDragActive] = useState(false);
   const [user, setUser] = useState(null);
   const [runType, setRunType] = useState(null);
   const [video, setVideo] = useState(null);
@@ -96,6 +97,34 @@ useEffect(() => {
 
   return () => clearInterval(interval);
 }, [screen]);
+function handleVideoFile(file) {
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    alert("Please choose a video file.");
+    return;
+  }
+
+  setVideo(file);
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  setDragActive(false);
+
+  const droppedFile = event.dataTransfer.files?.[0];
+  handleVideoFile(droppedFile);
+}
+
+function handleDragOver(event) {
+  event.preventDefault();
+  setDragActive(true);
+}
+
+function handleDragLeave(event) {
+  event.preventDefault();
+  setDragActive(false);
+}
 async function analyzeRun() {
   if (!video) {
     alert("Please choose a video first.");
@@ -467,20 +496,74 @@ const getShoeFeatures = (shoe) => {
                 : "Road mode checks common form patterns like overstride, forward lean, elbows, and side sway."}
             </p>
 
-            <div className="upload-zone">
-              <input
-                type="file"
-                accept="video/*"
-                onChange={(e) => setVideo(e.target.files[0])}
-              />
+            <div
+  className={`upload-zone upgraded-upload-zone ${
+    dragActive ? "drag-active" : ""
+  }`}
+  onDrop={handleDrop}
+  onDragOver={handleDragOver}
+  onDragLeave={handleDragLeave}
+>
+  <div className="upload-icon" aria-hidden="true">
+    ↑
+  </div>
 
-              {video && (
-  <p className="selected-file">✓ {video.name}</p>
-)}
-              <button className="primary-button" onClick={analyzeRun} disabled={loading}>
-                Analyze Run
-              </button>
-            </div>
+  <h3>Upload your running video</h3>
+
+  <p className="upload-description">
+    Drag and drop your clip here, or choose a video from your device.
+  </p>
+
+  <input
+    id="running-video-upload"
+    className="hidden-file-input"
+    type="file"
+    accept="video/*,.mp4,.mov"
+    onChange={(e) => handleVideoFile(e.target.files?.[0])}
+  />
+
+  <label
+    className="choose-video-button"
+    htmlFor="running-video-upload"
+  >
+    Choose Video
+  </label>
+
+  {video && (
+    <div className="selected-video-card">
+      <div className="selected-video-check">✓</div>
+
+      <div className="selected-video-info">
+        <span>Video ready</span>
+        <strong>{video.name}</strong>
+      </div>
+
+      <button
+        type="button"
+        className="remove-video-button"
+        onClick={() => setVideo(null)}
+        aria-label="Remove selected video"
+      >
+        ×
+      </button>
+    </div>
+  )}
+
+  <div className="video-requirements">
+    <span>✓ 10–15 second clip</span>
+    <span>✓ Side view</span>
+    <span>✓ Entire body visible</span>
+    <span>✓ MP4 or MOV</span>
+  </div>
+
+  <button
+    className="primary-button analyze-upload-button"
+    onClick={analyzeRun}
+    disabled={!video || loading}
+  >
+    {loading ? "Starting Analysis..." : "Analyze Run"}
+  </button>
+</div>
           </section>
         </main>
       )}
