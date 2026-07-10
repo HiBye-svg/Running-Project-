@@ -1643,4 +1643,6 @@ transform:none;
   .upgraded-shoe-card.best-overall {
     order: -1;
   }
+}.upgraded-shoe-card {
+  background: red !important;
 }
