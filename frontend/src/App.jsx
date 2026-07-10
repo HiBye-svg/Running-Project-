@@ -551,7 +551,7 @@ const getShoeFeatures = (shoe) => {
 
   <div className="video-requirements">
     <span>✓ 10–15 second clip</span>
-    <span>✓ Side view</span>
+    <span>✓ Decent Lighting</span>
     <span>✓ Entire body visible</span>
     <span>✓ MP4 or MOV</span>
   </div>
