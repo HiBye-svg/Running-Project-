@@ -34,6 +34,7 @@ function App() {
   const [shoeSuggestions, setShoeSuggestions] = useState(null);
   const [history, setHistory] = useState([]);
   const [showFounder, setShowFounder] = useState(false);
+  const [showProcess, setShowProcess] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const loadingSteps = [
   "Video uploaded",
@@ -372,6 +373,11 @@ const getShoeFeatures = (shoe) => {
     <button className="nav-link" onClick={() => setShowFounder(true)}>
       About Founder
     </button>
+    {!Capacitor.isNativePlatform() && (
+  <button className="nav-link" onClick={() => setShowProcess(true)}>
+    Development Process
+  </button>
+)}
   <a
   className="nav-link feedback-btn"
   href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=dialog"
@@ -411,7 +417,340 @@ const getShoeFeatures = (shoe) => {
     </div>
   </div>
 )}
+{showProcess && (
+  <div
+    className="modal-backdrop process-backdrop"
+    onClick={() => setShowProcess(false)}
+  >
+    <div
+      className="process-modal"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        className="modal-close"
+        onClick={() => setShowProcess(false)}
+      >
+        ×
+      </button>
 
+      <div className="process-header">
+        <p className="eyebrow">Development Process</p>
+        <h2>How Perfect Path Was Built</h2>
+
+        <p>
+          Perfect Path was developed through an iterative engineering process
+          influenced by Lean Six Sigma. Each version was tested, measured,
+          analyzed, and improved as new problems and opportunities were
+          identified.
+        </p>
+
+        <div className="dmaic-flow">
+          <span>DEFINE</span>
+          <b>→</b>
+          <span>MEASURE</span>
+          <b>→</b>
+          <span>ANALYZE</span>
+          <b>→</b>
+          <span>IMPROVE</span>
+          <b>→</b>
+          <span>CONTROL</span>
+          <b>→</b>
+          <span>ITERATE ↻</span>
+        </div>
+      </div>
+
+      <div className="process-timeline">
+
+        <article className="process-step">
+          <div className="process-number">01</div>
+          <div className="process-content">
+            <span className="process-phase">DEFINE</span>
+            <h3>Identify the Problem</h3>
+
+            <p>
+              Runners can record themselves, but identifying form problems
+              objectively and knowing how to improve them can be difficult.
+              Perfect Path began with the goal of turning a short running
+              video into understandable and actionable form feedback yet taking
+              the video of the film itself is hard, must be fixed later iteration.
+            </p>
+
+            <div className="process-arrow">
+              Running Video → Form Analysis → Actionable Feedback
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">02</div>
+          <div className="process-content">
+            <span className="process-phase">MEASURE</span>
+            <h3>Turn Running Form Into Data</h3>
+
+            <p>
+              Video processing was built to break running clips into frames.
+              Pose detection then identifies body positions throughout the
+              runner's movement so form can be measured instead of judged
+              only by appearance.
+            </p>
+
+            <div className="process-arrow">
+              Video → Frames → Pose Landmarks → Measurements
+            </div>
+
+            <div className="tech-tags">
+              <span>Python</span>
+              <span>OpenCV</span>
+              <span>YOLO Pose Detection</span>
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">03</div>
+          <div className="process-content">
+            <span className="process-phase">ANALYZE</span>
+            <h3>Determine What the Data Means</h3>
+
+            <p>
+              Pose measurements were converted into rules and thresholds for
+              detecting overstride, forward lean, arm stiffness, and
+              side-to-side sway. Frequency and time ranges were added to show
+              how consistently each issue appeared during a run.
+            </p>
+
+            <div className="process-arrow">
+              Pose Data → Form Metrics → Detection → Frequency + Time Ranges
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">04</div>
+          <div className="process-content">
+            <span className="process-phase">IMPROVE</span>
+            <h3>Adapt the Analysis to Different Runs</h3>
+
+            <p>
+              Testing revealed that one set of rules could not accurately
+              represent every running environment. Uphill running naturally
+              changes forward lean and stride patterns, while trails introduce
+              significantterrain variation leading me to make different analyisis 
+              pipelines for road, flat trail, and hill trail runs.
+    
+            </p>
+
+            <div className="process-arrow process-three-way">
+              <span>Road Mode</span>
+              <span>Flat Trail Mode</span>
+              <span>Hill Trail Mode</span>
+            </div>
+
+            <p className="process-result">
+              Result: analysis became more specific to the environment in
+              which the runner was actually moving.
+            </p>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">05</div>
+          <div className="process-content">
+            <span className="process-phase">BUILD</span>
+            <h3>Connect the Full Analysis Pipeline</h3>
+
+            <p>
+              The analysis engine was connected to a web interface so runners
+              could upload a clip, select their run type, send the video for
+              processing, and receive their results in one workflow.
+            </p>
+
+            <div className="pipeline-flow">
+              <span>React + Vite</span>
+              <b>→</b>
+              <span>FastAPI</span>
+              <b>→</b>
+              <span>OpenCV</span>
+              <b>→</b>
+              <span>YOLO</span>
+              <b>→</b>
+              <span>Analysis</span>
+              <b>→</b>
+              <span>Feedback</span>
+            </div>
+
+            <div className="tech-tags">
+              <span>React</span>
+              <span>Vite</span>
+              <span>FastAPI</span>
+              <span>Python</span>
+              <span>OpenCV</span>
+              <span>YOLO</span>
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">06</div>
+          <div className="process-content">
+            <span className="process-phase">CONTROL</span>
+            <h3>Track Improvement Over Time</h3>
+
+            <p>
+              A single analysis only shows one moment in a runner's progress.
+              Run history and progress graphs were added so runners could
+              compare form metrics across recent analyses and see whether
+              changes were improving their form.
+            </p>
+
+            <div className="process-arrow">
+              Analysis → Run History → Progress Graph → Re-Test
+            </div>
+
+            <div className="tech-tags">
+              <span>Recharts</span>
+              <span>Run History</span>
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">07</div>
+          <div className="process-content">
+            <span className="process-phase">PERSONALIZE</span>
+            <h3>Build Personalized Shoe Matching</h3>
+
+            <p>
+              Perfect Path expanded beyond identifying form issues by using
+              information from each analysis to help select shoes from a
+              database based on the runner and their run and further help
+              them along their journey.
+            </p>
+
+            <div className="process-arrow">
+              Form Issues + Run Type + Foot Width → Shoe Matching
+            </div>
+
+            <div className="process-three-way">
+              <span>Value Pick</span>
+              <span>Best Overall</span>
+              <span>Premium Choice</span>
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">08</div>
+          <div className="process-content">
+            <span className="process-phase">ITERATE</span>
+            <h3>Respond to Deployment Constraints</h3>
+
+            <p>
+              Real video processing introduced hosting and memory limitations.
+              Instead of changing the core goal, the deployment architecture
+              was adjusted and the analysis backend was moved to Hugging Face
+              Spaces. This allowed the analysis to run with the same quality 
+              while also being free for me to host.
+            </p>
+
+            <div className="process-arrow">
+              Deploy → Identify Constraint → Change Architecture → Re-Test
+            </div>
+
+            <div className="tech-tags">
+              <span>Render</span>
+              <span>Hugging Face Spaces</span>
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step">
+          <div className="process-number">09</div>
+          <div className="process-content">
+            <span className="process-phase">IMPROVE</span>
+            <h3>Iterate on the User Experience</h3>
+
+            <p>
+              Development continued after the core analysis worked. The
+              homepage, loading experience, result cards, progress
+              visualization, shoe recommendations, authentication, and
+              feedback system were repeatedly refined to make the product
+              easier to understand and use.
+            </p>
+
+            <div className="process-arrow">
+              Build → Test → Feedback → Redesign → Test Again
+            </div>
+
+            <div className="tech-tags">
+              <span>React</span>
+              <span>Firebase</span>
+              <span>Recharts</span>
+              <span>User Feedback</span>
+            </div>
+          </div>
+        </article>
+
+        <div className="timeline-arrow">↓</div>
+
+        <article className="process-step current-step">
+          <div className="process-number">10</div>
+          <div className="process-content">
+            <span className="process-phase">CURRENT ITERATION</span>
+            <h3>Move Perfect Path Toward Mobile</h3>
+
+            <p>
+              The next iteration brings the existing analysis system to
+              Android. Capacitor connects the React application to native
+              Android functionality, while CameraX allows running videos to be
+              recorded directly before entering the existing analysis
+              pipeline.
+            </p>
+
+            <div className="process-arrow">
+              Website → Capacitor → Android → CameraX → Analysis Pipeline
+            </div>
+
+            <div className="tech-tags">
+              <span>Capacitor</span>
+              <span>Android</span>
+              <span>CameraX</span>
+              <span>React</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div className="process-footer">
+        <p className="eyebrow">Continuous Improvement</p>
+        <h3>The process isn't finished.</h3>
+        <p>
+          Perfect Path continues to evolve through testing, measurement,
+          feedback, and iteration — applying the same continuous-improvement
+          mindset used throughout its development for a free and well working 
+          product for all sorts of runners.
+        </p>
+      </div>
+    </div>
+  </div>
+)}
 
       {screen === "home" && (
   <main className="home home-v2">

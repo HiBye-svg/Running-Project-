@@ -1,0 +1,5 @@
+{
+	"appId": "com.perfectpath.app",
+	"appName": "Perfect Path",
+	"webDir": "frontend/dist"
+}
