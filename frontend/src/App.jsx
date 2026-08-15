@@ -373,11 +373,11 @@ const getShoeFeatures = (shoe) => {
     <button className="nav-link" onClick={() => setShowFounder(true)}>
       About Founder
     </button>
-    {!Capacitor.isNativePlatform() && (
+   
   <button className="nav-link" onClick={() => setShowProcess(true)}>
     Development Process
   </button>
-)}
+
   <a
   className="nav-link feedback-btn"
   href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=dialog"
