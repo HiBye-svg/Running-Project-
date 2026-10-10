@@ -11,7 +11,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Award,
   Crown,
@@ -24,10 +24,16 @@ import {
 
 function App() {
   const [screen, setScreen] = useState("home");
+  const [previewTerrain, setPreviewTerrain] = useState("road");
   const [dragActive, setDragActive] = useState(false);
   const [user, setUser] = useState(null);
   const [runType, setRunType] = useState(null);
   const [video, setVideo] = useState(null);
+  const [videoUrl, setVideoUrl] = useState("");
+const [videoFrames, setVideoFrames] = useState([]);
+const [frameTime, setFrameTime] = useState(0);
+const [frameError, setFrameError] = useState(false);
+const previewVideoRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [footWidth, setFootWidth] = useState("");
@@ -35,12 +41,13 @@ function App() {
   const [history, setHistory] = useState([]);
   const [showFounder, setShowFounder] = useState(false);
   const [showProcess, setShowProcess] = useState(false);
+  const [activeDmaic, setActiveDmaic] = useState(0);
   const [loadingStep, setLoadingStep] = useState(0);
   const loadingSteps = [
   "Video uploaded",
-  "Extracting video frames",
-  "Detecting running pose",
-  "Generating your analysis",
+  "Processing footage",
+  "Analyzing running form",
+  "Preparing results",
 ];
   async function loginWithGoogle() {
   try {
@@ -98,6 +105,145 @@ useEffect(() => {
 
   return () => clearInterval(interval);
 }, [screen]);
+
+useEffect(() => {
+  if (!video) {
+    setVideoUrl("");
+    setVideoFrames([]);
+    setFrameTime(0);
+    setFrameError(false);
+    return;
+  }
+
+  let cancelled = false;
+  const url = URL.createObjectURL(video);
+  const extractor = document.createElement("video");
+
+  setVideoUrl(url);
+  setVideoFrames([]);
+  setFrameTime(0);
+  setFrameError(false);
+
+  extractor.preload = "auto";
+  extractor.muted = true;
+  extractor.playsInline = true;
+  extractor.src = url;
+
+  const waitForEvent = (element, eventName) =>
+    new Promise((resolve, reject) => {
+      const onSuccess = () => {
+        cleanup();
+        resolve();
+      };
+
+      const onError = () => {
+        cleanup();
+        reject(new Error("Could not read the video."));
+      };
+
+      const cleanup = () => {
+        element.removeEventListener(eventName, onSuccess);
+        element.removeEventListener("error", onError);
+      };
+
+      element.addEventListener(eventName, onSuccess, { once: true });
+      element.addEventListener("error", onError, { once: true });
+    });
+
+  async function extractFrames() {
+    try {
+      if (extractor.readyState < 1) {
+        const metadataReady = waitForEvent(
+          extractor,
+          "loadedmetadata"
+        );
+        extractor.load();
+        await metadataReady;
+      }
+
+      if (cancelled) return;
+
+      const duration = extractor.duration;
+
+      if (!Number.isFinite(duration) || duration <= 0) {
+        throw new Error("Video duration unavailable.");
+      }
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        throw new Error("Canvas unavailable.");
+      }
+
+      const aspect =
+        extractor.videoWidth / extractor.videoHeight || 16 / 9;
+
+      canvas.width = 200;
+      canvas.height = Math.max(
+        80,
+        Math.round(canvas.width / aspect)
+      );
+
+      const frames = [];
+      const count = 8;
+
+      for (let i = 0; i < count; i++) {
+        if (cancelled) return;
+
+        const time = Math.min(
+          duration * ((i + 0.5) / count),
+          Math.max(0, duration - 0.05)
+        );
+
+        const seekReady = waitForEvent(extractor, "seeked");
+        extractor.currentTime = time;
+        await seekReady;
+
+        if (cancelled) return;
+
+        context.drawImage(
+          extractor,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        frames.push({
+          time,
+          image: canvas.toDataURL("image/jpeg", 0.75),
+        });
+      }
+
+      if (!cancelled) {
+        setVideoFrames(frames);
+      }
+    } catch (error) {
+      if (!cancelled) {
+        console.error("Frame extraction failed:", error);
+        setFrameError(true);
+      }
+    }
+  }
+
+  extractFrames();
+
+  return () => {
+    cancelled = true;
+    extractor.removeAttribute("src");
+    extractor.load();
+    URL.revokeObjectURL(url);
+  };
+}, [video]);
+
+function seekToFrame(time) {
+  if (!previewVideoRef.current) return;
+
+  previewVideoRef.current.currentTime = time;
+  setFrameTime(time);
+}
+
 function handleVideoFile(file) {
   if (!file) return;
 
@@ -363,40 +509,50 @@ const getShoeFeatures = (shoe) => {
 };
   return (
   <div className="app-shell">
-    <nav className="navbar">
-  <button className="brand-button" onClick={goHome}>
-    <span className="brand-mark">PP</span>
-    <span>Perfect Path</span>
-  </button>
 
-  <div className="nav-actions">
-    <button className="nav-link" onClick={() => setShowFounder(true)}>
-      About Founder
+{screen !== "home" && (
+  <nav className="navbar">
+    <button className="brand-button" onClick={goHome}>
+      <span className="brand-mark">PP</span>
+      <span>Perfect Path</span>
     </button>
-   
-  <button className="nav-link" onClick={() => setShowProcess(true)}>
-    Development Process
-  </button>
 
-  <a
-  className="nav-link feedback-btn"
-  href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=dialog"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Feedback
-</a>
-    {user ? (
-      <button className="nav-link nav-signin" onClick={logout}>
-        Sign out
+    <div className="nav-actions">
+      <button
+        className="nav-link"
+        onClick={() => setShowFounder(true)}
+      >
+        About Founder
       </button>
-    ) : (
-      <button className="nav-link nav-signin" onClick={loginWithGoogle}>
-        Sign in
+
+      <button
+        className="nav-link"
+        onClick={() => setShowProcess(true)}
+      >
+        Development Process
       </button>
-    )}
-  </div>
-</nav>
+
+      <a
+        className="nav-link feedback-btn"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdJ82zRjynBXSyw9cUJ31wQ93BZx0iVizn14pv3bFZqClmkxA/viewform?usp=dialog"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Feedback
+      </a>
+
+      {user ? (
+        <button className="nav-link nav-signin" onClick={logout}>
+          Sign out
+        </button>
+      ) : (
+        <button className="nav-link nav-signin" onClick={loginWithGoogle}>
+          Sign in
+        </button>
+      )}
+    </div>
+  </nav>
+)}
 
 {showFounder && (
   <div className="modal-backdrop" onClick={() => setShowFounder(false)}>
@@ -417,535 +573,447 @@ const getShoeFeatures = (shoe) => {
     </div>
   </div>
 )}
+
 {showProcess && (
   <div
-    className="modal-backdrop process-backdrop"
+    className="modal-backdrop pp-dmaic-backdrop"
     onClick={() => setShowProcess(false)}
   >
-    <div
-      className="process-modal"
+    <section
+      className="pp-dmaic-modal"
       onClick={(e) => e.stopPropagation()}
+      aria-label="PerfectPath development process"
     >
       <button
-        className="modal-close"
+        className="pp-dmaic-close"
+        type="button"
+        aria-label="Close development process"
         onClick={() => setShowProcess(false)}
       >
         ×
       </button>
 
-      <div className="process-header">
-        <p className="eyebrow">Development Process</p>
-        <h2>How Perfect Path Was Built</h2>
+      <header className="pp-dmaic-header">
+        <p>DEVELOPMENT PROCESS</p>
+        <h2>How PerfectPath Was Built</h2>
+        <span>LEAN SIX SIGMA / DMAIC</span>
+      </header>
 
+      <nav className="pp-dmaic-nav" aria-label="DMAIC stages">
+        {[
+          ["D", "DEFINE"],
+          ["M", "MEASURE"],
+          ["A", "ANALYZE"],
+          ["I", "IMPROVE"],
+          ["C", "CONTROL"],
+        ].map(([letter, name], index) => (
+          <button
+            key={letter}
+            type="button"
+            className={`pp-dmaic-tab ${
+              activeDmaic === index ? "is-active" : ""
+            }`}
+            onClick={() => setActiveDmaic(index)}
+            aria-pressed={activeDmaic === index}
+          >
+            <strong>{letter}</strong>
+            <span>{name}</span>
+          </button>
+        ))}
+      </nav>
+
+      <div className="pp-dmaic-content">
+        {activeDmaic === 0 && (
+          <article>
+            <span className="pp-dmaic-phase">DEFINE</span>
+            <h3>Why I started PerfectPath</h3>
+
+            <p>
+              My body never properly recovered during my first year
+              of cross country, which was very different from the
+              jogs I had done before. I realized that both my shoes
+              and running form were contributing to the problem,
+              and I watched teammates miss races because of
+              preventable injuries.
+            </p>
+
+            <p>
+              I decided to build PerfectPath to help newer runners
+              who may not know yet if they want to continue running,
+              as well as average runners who want to improve their
+              form and reduce their chance of injury without having
+              to pay for it.
+            </p>
+          </article>
+        )}
+
+        {activeDmaic === 1 && (
+          <article>
+            <span className="pp-dmaic-phase">MEASURE</span>
+            <h3>Finding what was worth measuring</h3>
+
+            <p>
+              I researched existing gait-analysis platforms and
+              found that while some offered detailed feedback,
+              they often required costly subscriptions. Others
+              were more affordable but lacked meaningful analysis.
+            </p>
+
+            <p>
+              Through multiple revisions, I built a platform that
+              analyzes a runner's form from a short video and
+              identifies common issues such as overstriding,
+              excessive side sway, forward lean, and arm stiffness.
+            </p>
+          </article>
+        )}
+
+        {activeDmaic === 2 && (
+          <article>
+            <span className="pp-dmaic-phase">ANALYZE</span>
+            <h3>Understanding the system's limitations</h3>
+
+            <p>
+              One recurring issue was that the YOLO analysis
+              consumed too many resources for the free Render
+              backend, so I tested different hosting platforms
+              and video resolutions to find a setup that worked.
+            </p>
+
+            <p>
+              I ran into a similar problem with video length.
+              Originally, recordings could be over a minute long,
+              but longer videos often caused the website to crash.
+            </p>
+          </article>
+        )}
+
+        {activeDmaic === 3 && (
+          <article>
+            <span className="pp-dmaic-phase">IMPROVE</span>
+            <h3>Testing and redesigning</h3>
+
+            <p>
+              After testing different lengths and researching
+              what YOLO needed for a useful analysis, I eventually
+              limited recordings to 10 seconds.
+            </p>
+
+            <p>
+              I used this approach to continuously test and
+              redesign my backend based on what was simplest and
+              most important to the website’s main purpose.
+            </p>
+
+            <p>
+              I also added shoe recommendations based on each
+              runner's results.
+            </p>
+          </article>
+        )}
+
+        {activeDmaic === 4 && (
+          <article>
+            <span className="pp-dmaic-phase">CONTROL</span>
+            <h3>Using feedback to guide further development</h3>
+
+            <p>
+              Within five to six weeks after launching the website,
+              more than 1,000 runners had used it.
+            </p>
+
+            <p>
+              The growth felt almost ephemeral once I realized
+              that most users stopped using the website after
+              only three or four days. This showed me that I
+              needed better ways to retain users.
+            </p>
+
+            <p>
+              After reviewing their feedback, I decided to
+              develop a mobile app with a built-in camera that
+              automatically stops after a 10-second recording.
+            </p>
+          </article>
+        )}
+      </div>
+
+      <footer className="pp-dmaic-footer">
         <p>
-          Perfect Path was developed through an iterative engineering process
-          influenced by Lean Six Sigma. Each version was tested, measured,
-          analyzed, and improved as new problems and opportunities were
-          identified.
+          I also learned that improvement does not always mean
+          adding more; sometimes the best improvement is
+          simplifying what already exists.
         </p>
 
-        <div className="dmaic-flow">
-          <span>DEFINE</span>
-          <b>→</b>
-          <span>MEASURE</span>
-          <b>→</b>
-          <span>ANALYZE</span>
-          <b>→</b>
-          <span>IMPROVE</span>
-          <b>→</b>
-          <span>CONTROL</span>
-          <b>→</b>
-          <span>ITERATE ↻</span>
-        </div>
-      </div>
-
-      <div className="process-timeline">
-
-        <article className="process-step">
-          <div className="process-number">01</div>
-          <div className="process-content">
-            <span className="process-phase">DEFINE</span>
-            <h3>Identify the Problem</h3>
-
-            <p>
-              Runners can record themselves, but identifying form problems
-              objectively and knowing how to improve them can be difficult.
-              Perfect Path began with the goal of turning a short running
-              video into understandable and actionable form feedback yet taking
-              the video of the film itself is hard, must be fixed later iteration.
-            </p>
-
-            <div className="process-arrow">
-              Running Video → Form Analysis → Actionable Feedback
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">02</div>
-          <div className="process-content">
-            <span className="process-phase">MEASURE</span>
-            <h3>Turn Running Form Into Data</h3>
-
-            <p>
-              Video processing was built to break running clips into frames.
-              Pose detection then identifies body positions throughout the
-              runner's movement so form can be measured instead of judged
-              only by appearance.
-            </p>
-
-            <div className="process-arrow">
-              Video → Frames → Pose Landmarks → Measurements
-            </div>
-
-            <div className="tech-tags">
-              <span>Python</span>
-              <span>OpenCV</span>
-              <span>YOLO Pose Detection</span>
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">03</div>
-          <div className="process-content">
-            <span className="process-phase">ANALYZE</span>
-            <h3>Determine What the Data Means</h3>
-
-            <p>
-              Pose measurements were converted into rules and thresholds for
-              detecting overstride, forward lean, arm stiffness, and
-              side-to-side sway. Frequency and time ranges were added to show
-              how consistently each issue appeared during a run.
-            </p>
-
-            <div className="process-arrow">
-              Pose Data → Form Metrics → Detection → Frequency + Time Ranges
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">04</div>
-          <div className="process-content">
-            <span className="process-phase">IMPROVE</span>
-            <h3>Adapt the Analysis to Different Runs</h3>
-
-            <p>
-              Testing revealed that one set of rules could not accurately
-              represent every running environment. Uphill running naturally
-              changes forward lean and stride patterns, while trails introduce
-              significantterrain variation leading me to make different analyisis 
-              pipelines for road, flat trail, and hill trail runs.
-    
-            </p>
-
-            <div className="process-arrow process-three-way">
-              <span>Road Mode</span>
-              <span>Flat Trail Mode</span>
-              <span>Hill Trail Mode</span>
-            </div>
-
-            <p className="process-result">
-              Result: analysis became more specific to the environment in
-              which the runner was actually moving.
-            </p>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">05</div>
-          <div className="process-content">
-            <span className="process-phase">BUILD</span>
-            <h3>Connect the Full Analysis Pipeline</h3>
-
-            <p>
-              The analysis engine was connected to a web interface so runners
-              could upload a clip, select their run type, send the video for
-              processing, and receive their results in one workflow.
-            </p>
-
-            <div className="pipeline-flow">
-              <span>React + Vite</span>
-              <b>→</b>
-              <span>FastAPI</span>
-              <b>→</b>
-              <span>OpenCV</span>
-              <b>→</b>
-              <span>YOLO</span>
-              <b>→</b>
-              <span>Analysis</span>
-              <b>→</b>
-              <span>Feedback</span>
-            </div>
-
-            <div className="tech-tags">
-              <span>React</span>
-              <span>Vite</span>
-              <span>FastAPI</span>
-              <span>Python</span>
-              <span>OpenCV</span>
-              <span>YOLO</span>
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">06</div>
-          <div className="process-content">
-            <span className="process-phase">CONTROL</span>
-            <h3>Track Improvement Over Time</h3>
-
-            <p>
-              A single analysis only shows one moment in a runner's progress.
-              Run history and progress graphs were added so runners could
-              compare form metrics across recent analyses and see whether
-              changes were improving their form.
-            </p>
-
-            <div className="process-arrow">
-              Analysis → Run History → Progress Graph → Re-Test
-            </div>
-
-            <div className="tech-tags">
-              <span>Recharts</span>
-              <span>Run History</span>
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">07</div>
-          <div className="process-content">
-            <span className="process-phase">PERSONALIZE</span>
-            <h3>Build Personalized Shoe Matching</h3>
-
-            <p>
-              Perfect Path expanded beyond identifying form issues by using
-              information from each analysis to help select shoes from a
-              database based on the runner and their run and further help
-              them along their journey.
-            </p>
-
-            <div className="process-arrow">
-              Form Issues + Run Type + Foot Width → Shoe Matching
-            </div>
-
-            <div className="process-three-way">
-              <span>Value Pick</span>
-              <span>Best Overall</span>
-              <span>Premium Choice</span>
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">08</div>
-          <div className="process-content">
-            <span className="process-phase">ITERATE</span>
-            <h3>Respond to Deployment Constraints</h3>
-
-            <p>
-              Real video processing introduced hosting and memory limitations.
-              Instead of changing the core goal, the deployment architecture
-              was adjusted and the analysis backend was moved to Hugging Face
-              Spaces. This allowed the analysis to run with the same quality 
-              while also being free for me to host.
-            </p>
-
-            <div className="process-arrow">
-              Deploy → Identify Constraint → Change Architecture → Re-Test
-            </div>
-
-            <div className="tech-tags">
-              <span>Render</span>
-              <span>Hugging Face Spaces</span>
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step">
-          <div className="process-number">09</div>
-          <div className="process-content">
-            <span className="process-phase">IMPROVE</span>
-            <h3>Iterate on the User Experience</h3>
-
-            <p>
-              Development continued after the core analysis worked. The
-              homepage, loading experience, result cards, progress
-              visualization, shoe recommendations, authentication, and
-              feedback system were repeatedly refined to make the product
-              easier to understand and use.
-            </p>
-
-            <div className="process-arrow">
-              Build → Test → Feedback → Redesign → Test Again
-            </div>
-
-            <div className="tech-tags">
-              <span>React</span>
-              <span>Firebase</span>
-              <span>Recharts</span>
-              <span>User Feedback</span>
-            </div>
-          </div>
-        </article>
-
-        <div className="timeline-arrow">↓</div>
-
-        <article className="process-step current-step">
-          <div className="process-number">10</div>
-          <div className="process-content">
-            <span className="process-phase">CURRENT ITERATION</span>
-            <h3>Move Perfect Path Toward Mobile</h3>
-
-            <p>
-              The next iteration brings the existing analysis system to
-              Android. Capacitor connects the React application to native
-              Android functionality, while CameraX allows running videos to be
-              recorded directly before entering the existing analysis
-              pipeline.
-            </p>
-
-            <div className="process-arrow">
-              Website → Capacitor → Android → CameraX → Analysis Pipeline
-            </div>
-
-            <div className="tech-tags">
-              <span>Capacitor</span>
-              <span>Android</span>
-              <span>CameraX</span>
-              <span>React</span>
-            </div>
-          </div>
-        </article>
-
-      </div>
-
-      <div className="process-footer">
-        <p className="eyebrow">Continuous Improvement</p>
-        <h3>The process isn't finished.</h3>
-        <p>
-          Perfect Path continues to evolve through testing, measurement,
-          feedback, and iteration — applying the same continuous-improvement
-          mindset used throughout its development for a free and well working 
-          product for all sorts of runners.
-        </p>
-      </div>
-    </div>
+<span>{activeDmaic + 1}/5</span>
+      </footer>
+    </section>
   </div>
 )}
 
-      {screen === "home" && (
-  <main className="home home-v2">
-    <section className="sunrise-hero">
-      <div className="sunrise-bg"></div>
-      <div className="sunrise-mountains back"></div>
-      <div className="sunrise-mountains front"></div>
-      <div className="hero-birds">
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
-      <div className="sunrise-trail"></div>
 
-      <div className="hero-runner">
-        <span className="head"></span>
-        <span className="body"></span>
-        <span className="arm arm-left"></span>
-        <span className="arm arm-right"></span>
-        <span className="leg leg-left"></span>
-        <span className="leg leg-right"></span>
+      
+
+{screen === "home" && (
+  <main className={`pp-home pp-home-${previewTerrain}`}>
+    <div className="pp-home-overlay" />
+
+
+    <header className="pp-header">
+      <button className="pp-logo" onClick={goHome}>
+        PERFECTPATH
+      </button>
+
+     
+<nav
+  className="pp-terrain-nav"
+  aria-label="Choose running terrain"
+  onMouseLeave={() => setPreviewTerrain("road")}
+>
+  <button
+    onMouseEnter={() => setPreviewTerrain("road")}
+    onFocus={() => setPreviewTerrain("road")}
+    onClick={() => chooseRun("road")}
+  >
+    ROAD
+  </button>
+
+  <button
+    onMouseEnter={() => setPreviewTerrain("flat")}
+    onFocus={() => setPreviewTerrain("flat")}
+    onClick={() => chooseRun("flat_trail")}
+  >
+    FLAT TRAIL
+  </button>
+
+  <button
+    onMouseEnter={() => setPreviewTerrain("hill")}
+    onFocus={() => setPreviewTerrain("hill")}
+    onClick={() => chooseRun("trail_hill")}
+  >
+    HILL TRAIL
+  </button>
+</nav>
+
+
+      <div className="pp-header-actions">
+        <button onClick={() => setShowFounder(true)}>
+          ABOUT
+        </button>
+
+        <button onClick={() => setShowProcess(true)}>
+          PROCESS
+        </button>
+
+        <button onClick={user ? logout : loginWithGoogle}>
+          {user ? "SIGN OUT" : "SIGN IN"}
+        </button>
+      </div>
+    </header>
+
+    <section className="pp-hero">
+      <div className="pp-hero-content">
+        <p className="pp-eyebrow">RUNNING FORM ANALYSIS</p>
+
+        <h1>Perfect how you run.</h1>
+
+        <p className="pp-description">
+          Upload a video. Analyze your form.
+          <br />
+          Make changes.
+        </p>
+
+        <p className="pp-terrain-hint">
+          SELECT A TERRAIN ABOVE TO BEGIN
+          <span aria-hidden="true"> ↗</span>
+        </p>
+      </div>
+    </section>
+
+    <div className="pp-home-footer">
+      <span>PERFECTPATH / RUNNING FORM ANALYSIS</span>
+      <span>BUILT FOR RUNNERS BY A RUNNER </span>
+    </div>
+  </main>
+)}
+
+
+
+{screen === "analyze" && (
+  <main className="analysis-page pp-lab-page">
+    <button className="back-button" onClick={goHome}>
+      ← BACK
+    </button>
+
+    <section className="pp-motion-layout">
+      <div className="pp-motion-intro">
+        <p className="pp-motion-terrain">
+          {isHillTrail
+            ? "HILL TRAIL / FORM ANALYSIS"
+            : isFlatTrail
+            ? "FLAT TRAIL / FORM ANALYSIS"
+            : "ROAD / FORM ANALYSIS"}
+        </p>
+
+        <h1>
+AIM          <br />
+          <span>FOR PERFECTION</span>
+        </h1>
+
+        <p className="pp-motion-description">
+          {isHillTrail
+            ? "Fix your form while running on hills and uphill terrain"
+            : isFlatTrail
+            ? "Fix your form while running on trails"
+            : "Fix your form while running on the road"}
+        </p>
+
       </div>
 
-      <div className="hero-content-v2">
-  <h1>
-    Find Your
-    <span>Perfect Path</span>
-  </h1>
-
-  <p>
-    Upload a 10 second running clip and receive personalized guidance to improve
-    your form and get shoes targeted for you.
-  </p>
-  <div className="hero-trust-strip">
-  <span>AI Advice</span>
-  <span className="trust-divider">•</span>
-  <span>YOLO Pose Detection</span>
-  <span className="trust-divider">•</span>
-  <span>Personalized Shoe Matching</span>
-</div>
-</div>  
-
-<section className="mode-grid mode-grid-v2">
-        <button className="mode-card road-card" onClick={() => chooseRun("road")}>
-          <div className="mode-icon">
-            
+      <div className="pp-motion-workspace">
+        <div
+          className={`pp-motion-stage ${dragActive ? "is-dragging" : ""}`}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+        >
+          <div className="pp-motion-crosshair" aria-hidden="true">
+            <span />
+            <span />
           </div>
-          <h2>Normal Run</h2>
-          <p>Best for road runs, track workouts, and easy runs.</p>
-          <span>Analyze road form →</span>
-        </button>
+{videoUrl && (
+  <video
+    ref={previewVideoRef}
+    className="pp-motion-video-preview"
+    src={videoUrl}
+    controls
+    playsInline
+    preload="metadata"
+    onTimeUpdate={(e) => setFrameTime(e.currentTarget.currentTime)}
+  />
+)}
+          <div
+  className={`pp-motion-stage-content ${
+    videoUrl ? "pp-motion-content-with-video" : ""
+  }`}
+>
+    
 
-        <button className="mode-card trail-card" onClick={() => chooseRun("flat_trail")}>
-          <div className="mode-icon"></div>
-          <h2>Flat Trail</h2>
-          <p>For flatter trails where terrain varies but not a significant elevation gain.</p>
-          <span>Analyze flat trail →</span>
-        </button>
+            <h2>
+              {video ? "FOOTAGE READY." : "Add Running Footage Here"}
+            </h2>
 
-        <button className="mode-card hill-card" onClick={() => chooseRun("trail_hill")}>
-          <div className="mode-icon"></div>
-          <h2>Hill Trail</h2>
-          <p>For uphill trail clips.</p>
-          <span>Analyze hill form →</span>
-        </button>
-      </section>
+            <p>
+              {video
+                ? video.name
+                : "Drop your running footage here or select a file."}
+            </p>
 
-      <div className="hero-feature-strip">
-        <div>Accurate Analysis</div>
-        <div>Clear Guidance</div>
-        <div>Your Best Run</div>
+            <input
+              id="running-video-upload"
+              className="hidden-file-input"
+              type="file"
+              accept="video/*,.mp4,.mov"
+              onChange={(e) => handleVideoFile(e.target.files?.[0])}
+            />
+
+            <label
+              className="pp-motion-select"
+              htmlFor="running-video-upload"
+            >
+              {video ? "CHANGE FOOTAGE ↗" : "SELECT FOOTAGE ↗"}
+            </label>
+          </div>
+
+          <div className="pp-motion-stage-bottom">
+            <span>PERFECTPATH</span>
+            <span>{dragActive ? "RELEASE TO UPLOAD" : "DRAG AND DROP ARE AVAILABLE"}</span>
+          </div>
+        </div>
+
+        <div className="pp-motion-filmstrip">
+          <div className="pp-motion-filmstrip-header">
+            <span>FRAME SEQUENCE</span>
+            <span>{video ? "PREVIEW PENDING" : "NO FOOTAGE LOADED"}</span>
+          </div>
+
+          
+<div className="pp-motion-empty-frames">
+  {videoFrames.length > 0 ? (
+    videoFrames.map((frame, index) => (
+      <button
+        key={index}
+        type="button"
+        className={`pp-motion-frame-button ${
+          Math.abs(frameTime - frame.time) <
+          ((videoFrames[1]?.time - videoFrames[0]?.time) || 0.5) / 2
+            ? "is-selected"
+            : ""
+        }`}
+        onClick={() => seekToFrame(frame.time)}
+        title={`Jump to ${frame.time.toFixed(1)} seconds`}
+      >
+        <img src={frame.image} alt={`Video frame ${index + 1}`} />
+        <span>{frame.time.toFixed(1)}s</span>
+      </button>
+    ))
+  ) : (
+    Array.from({ length: 8 }, (_, index) => (
+      <div key={index} className="pp-motion-empty-frame">
+        <span>{String(index + 1).padStart(2, "0")}</span>
+      </div>
+    ))
+  )}
+</div>
+
+{video && videoFrames.length === 0 && (
+  <p className="pp-motion-frame-status">
+    {frameError
+      ? "Frame previews unavailable for this video."
+      : "Generating frame previews..."}
+  </p>
+)}
+
+        </div>
+
+        <div className="pp-motion-controls">
+          <div className="pp-motion-requirements">
+            <span>FULL BODY VISIBLE</span>
+            <span>GOOD LIGHTING</span>
+            <span>MP4 / MOV</span>
+          </div>
+
+          <div className="pp-motion-actions">
+            {video && (
+              <button
+                className="pp-motion-remove"
+                type="button"
+                onClick={() => setVideo(null)}
+              >
+                REMOVE FILE
+              </button>
+            )}
+
+            <button
+              className="pp-motion-analyze"
+              onClick={analyzeRun}
+              disabled={!video || loading}
+            >
+              {loading ? "STARTING..." : "ANALYZE RUN ↗"}
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 )}
 
-      {screen === "analyze" && (
-        <main className="analysis-page">
-          <button className="back-button" onClick={goHome}>
-            ← Back
-          </button>
-
-          <section className="analysis-card">
-            <p className="eyebrow">
-  {isHillTrail
-    ? "Hill Trail Mode"
-    : isFlatTrail
-    ? "Flat Trail Mode"
-    : "Normal Run Mode"}
-</p>
-
-<h1>
-  {isHillTrail
-    ? "Analyze your uphill trail form."
-    : isFlatTrail
-    ? "Analyze your flat trail form."
-    : "Analyze your road form."}
-</h1>
-
-<p>
-  {isHillTrail
-    ? "Hill trail mode accounts for uphill movement, stronger forward lean, shorter stride patterns, and uneven terrain."
-    : isFlatTrail
-    ? "Flat trail mode is better for terrain variation while checking stride, posture, and side-to-side movement."
-    : "Road mode checks common form patterns like overstride, forward lean, elbows, and side sway."}
-</p>
-
-            <div
-  className={`upload-zone upgraded-upload-zone ${
-    dragActive ? "drag-active" : ""
-  }`}
-  onDrop={handleDrop}
-  onDragOver={handleDragOver}
-  onDragLeave={handleDragLeave}
->
-  <div className="upload-icon" aria-hidden="true">
-    ↑
-  </div>
-
-  <h3>Upload your running video</h3>
-
-  <p className="upload-description">
-    Drag and drop your clip here, or choose a video from your device.
-  </p>
-
-  <input
-    id="running-video-upload"
-    className="hidden-file-input"
-    type="file"
-    accept="video/*,.mp4,.mov"
-    onChange={(e) => handleVideoFile(e.target.files?.[0])}
-  />
-
-  <label
-    className="choose-video-button"
-    htmlFor="running-video-upload"
-  >
-    Choose Video
-  </label>
-
-  {video && (
-    <div className="selected-video-card">
-      <div className="selected-video-check">✓</div>
-
-      <div className="selected-video-info">
-        <span>Video ready</span>
-        <strong>{video.name}</strong>
-      </div>
-
-      <button
-        type="button"
-        className="remove-video-button"
-        onClick={() => setVideo(null)}
-        aria-label="Remove selected video"
-      >
-        ×
-      </button>
-    </div>
-  )}
-
-  <div className="video-requirements">
-    <span>✓ 10–15 second clip</span>
-    <span>✓ Decent Lighting</span>
-    <span>✓ Entire body visible</span>
-    <span>✓ MP4 or MOV</span>
-  </div>
-
-  <button
-    className="primary-button analyze-upload-button"
-    onClick={analyzeRun}
-    disabled={!video || loading}
-  >
-    {loading ? "Starting Analysis..." : "Analyze Run"}
-  </button>
-</div>
-          </section>
-        </main>
-      )}
 
       {screen === "loading" && (
         <main className="loading-page">
           <div className="loading-card">
-            <div className="runner-scene">
-              <div className="sun"></div>
-              <div className="path"></div>
 
-<div className="footprints">
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
-              <div className="mini-tree left-tree"></div>
-              <div className="mini-tree right-tree"></div>
-            </div>
+
 
             <h2>Analyzing your run...</h2>
            <div className="loading-progress">
@@ -1000,7 +1068,7 @@ const isActive =
           : "Road movement is analyzed using your standard form metrics."}
       </p>
     </section>
-
+<div className="pp-results-overview">
     <section className="issue-grid">
       {result.issues.map((issue, index) => (
         <div
@@ -1012,7 +1080,11 @@ const isActive =
             <span>{issue.detected ? "Detected" : "Clear"}</span>
           </div>
 
-          <p className="issue-frequency">{issue.frequency_percent}%</p>
+          <p className="issue-frequency">
+  {typeof issue.frequency_percent === "number"
+    ? `${issue.frequency_percent}%`
+    : issue.frequency_percent ?? "N/A"}
+</p>
           <p className="issue-time">
             {issue.time_ranges.length > 0
               ? issue.time_ranges.join(", ")
@@ -1047,10 +1119,13 @@ const isActive =
         <Line type="monotone" dataKey="sideSway" name="Side Sway" stroke="#10B981" strokeWidth={4} dot={{ r: 5 }} activeDot={{ r: 8 }} isAnimationActive animationDuration={1200} animationBegin={450} animationEasing="ease-out" />
       </LineChart>
     </ResponsiveContainer>
+      </div>
+  </section>
+
   </div>
-</section>
-    <section className="feedback-card">
-      <h2>AI Feedback</h2>
+<div className="pp-results-bottom">
+  <section className="feedback-card">
+    <h2>AI Feedback</h2>
       <p>{result.feedback}</p>
     </section>
 
@@ -1081,12 +1156,7 @@ const isActive =
       <p className="shoe-context-label">Recommendations based on</p>
 
       <div className="shoe-context-items">
-        <span>
-          <Footprints size={16} />
-          {footWidth
-            ? `${footWidth.charAt(0).toUpperCase() + footWidth.slice(1)} fit`
-            : "Selected fit"}
-        </span>
+        
 
         {result?.issues
           ?.filter((issue) => issue.detected)
@@ -1158,6 +1228,7 @@ const isActive =
   </>
 )}
     </section>
+     </div>
   </main>
 )}
     </div>
